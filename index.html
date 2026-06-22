@@ -163,7 +163,7 @@ input,textarea,select{user-select:text}
 .card:active{transform:scale(.985);box-shadow:0 1px 6px rgba(0,0,0,0.1)}
 .card.pinned{
   background:var(--pinned-bg);
-  border-color:rgba(212,160,32,0.35);
+  border-color:rgba(200,152,40,0.35);
   box-shadow:0 2px 12px rgba(200,152,40,0.12),inset 0 1px 0 rgba(255,255,255,0.6);
   border-left:4px solid var(--pinned-border);
 }
@@ -224,7 +224,7 @@ input,textarea,select{user-select:text}
   width:58px;height:58px;border-radius:50%;
   background:var(--primary);color:#fff;
   border:none;font-size:30px;cursor:pointer;
-  box-shadow:0 4px 20px var(--primary-glow),0 2px 8px rgba(0,0,0,0.3);
+  box-shadow:0 4px 20px var(--primary-glow),0 2px 8px rgba(0,0,0,0.15);
   display:flex;align-items:center;justify-content:center;
   z-index:150;transition:all .2s;
   -webkit-tap-highlight-color:transparent;
@@ -279,10 +279,7 @@ input,textarea,select{user-select:text}
 
 /* ===== Form Elements ===== */
 .form-group{margin-bottom:18px}
-.form-label{
-  font-size:13px;font-weight:600;color:var(--text-secondary);
-  margin-bottom:8px;display:block;
-}
+.form-label{font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;display:block}
 .form-input,.form-textarea,.form-select{
   width:100%;padding:12px 16px;
   border:1px solid var(--glass-border);
@@ -298,9 +295,7 @@ input,textarea,select{user-select:text}
   outline:none;border-color:var(--primary);
   box-shadow:0 0 0 3px var(--primary-glow);
 }
-.form-textarea{
-  min-height:110px;resize:vertical;line-height:1.7;
-}
+.form-textarea{min-height:110px;resize:vertical;line-height:1.7}
 .form-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
 .chip-row{display:flex;flex-wrap:wrap;gap:8px}
 .chip{
@@ -315,15 +310,9 @@ input,textarea,select{user-select:text}
 .chip.selected{background:var(--primary);color:#fff;border-color:var(--primary)}
 .chip.sel{transform:scale(1.05)}
 .chip:active{transform:scale(.96)}
-.chip-add{
-  font-size:12px;padding:5px 14px;border-radius:16px;
-  border:1px dashed var(--glass-border-strong);background:none;
-  color:var(--primary);cursor:pointer;
-}
+.chip-add{font-size:12px;padding:5px 14px;border-radius:16px;border:1px dashed var(--glass-border-strong);background:none;color:var(--primary);cursor:pointer}
 .chip-add:active{background:var(--primary-glow)}
-.inline-add{
-  display:flex;gap:8px;margin-top:8px;
-}
+.inline-add{display:flex;gap:8px;margin-top:8px}
 .inline-add input{
   flex:1;padding:10px 14px;border:1px solid var(--glass-border);
   border-radius:var(--radius-sm);font-size:13px;
@@ -364,35 +353,25 @@ input,textarea,select{user-select:text}
 .detail-actions button:active{background:rgba(0,0,0,0.08)}
 .detail-body{padding:16px;flex:1;overflow-y:auto}
 .detail-field{margin-bottom:24px}
-.detail-field-label{
-  font-size:11px;font-weight:600;color:var(--text-muted);
-  margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px;
-}
+.detail-field-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px}
 .detail-field-value{font-size:15px;line-height:1.8;color:var(--text);word-break:break-word}
-.detail-link{
-  display:inline-flex;align-items:center;gap:4px;
-  color:var(--primary);text-decoration:none;font-size:14px;
-  word-break:break-all;
-}
+.detail-link{display:inline-flex;align-items:center;gap:4px;color:var(--primary);text-decoration:none;font-size:14px;word-break:break-all}
 .detail-link:active{opacity:.6}
 
 /* ===== Management Page ===== */
 .mgmt-body{padding:18px}
-.mgmt-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 0;border-bottom:1px solid var(--glass-border);
-}
+.mgmt-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--glass-border)}
 .mgmt-item-name{font-size:14px;color:var(--text)}
 .mgmt-item-delete{
   width:30px;height:30px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  border:1px solid rgba(248,113,113,0.3);
+  border:1px solid rgba(224,85,85,0.3);
   background:var(--danger-bg);color:var(--danger);
   font-size:14px;cursor:pointer;
   backdrop-filter:var(--blur-light);
   -webkit-backdrop-filter:var(--blur-light);
 }
-.mgmt-item-delete:active{background:rgba(248,113,113,0.25)}
+.mgmt-item-delete:active{background:rgba(224,85,85,0.25)}
 .mgmt-add-row{display:flex;gap:8px;margin-top:18px;padding-top:18px;border-top:1px solid var(--glass-border)}
 .mgmt-add-row input{flex:1}
 .mgmt-usage{font-size:11px;color:var(--text-muted);margin-left:6px}
@@ -400,8 +379,8 @@ input,textarea,select{user-select:text}
 /* ===== Delete Confirm ===== */
 .modal-actions{display:flex;gap:12px}
 .modal-actions .btn{flex:1;justify-content:center}
-.btn-danger{background:var(--danger);color:#fff;box-shadow:0 2px 12px rgba(248,113,113,0.3)}
-.btn-danger:active{background:#ef4444}
+.btn-danger{background:var(--danger);color:#fff;box-shadow:0 2px 12px rgba(224,85,85,0.3)}
+.btn-danger:active{background:#d44}
 
 /* ===== Toast ===== */
 .toast{
@@ -419,10 +398,7 @@ input,textarea,select{user-select:text}
 .toast.out{animation:toastOut .2s ease-in forwards}
 
 /* ===== Filter Panel ===== */
-.filter-row{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:18px;
-}
+.filter-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .filter-label{font-size:13px;font-weight:600;color:var(--text-secondary)}
 .filter-reset{font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer}
 
@@ -431,7 +407,6 @@ input,textarea,select{user-select:text}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes toastOut{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
-
 @media(min-width:500px){
   .app{border-left:1px solid var(--glass-border);border-right:1px solid var(--glass-border)}
 }
@@ -443,16 +418,12 @@ input,textarea,select{user-select:text}
 
 <!-- ====== HOME VIEW ====== -->
 <div id="home-view" style="display:flex;flex-direction:column;flex:1;min-height:100vh">
-
-  <!-- Header -->
   <header class="header">
     <div class="header-top">
       <div class="header-title">灵感速记</div>
       <button class="header-menu" id="btn-mgmt" title="标签管理">标签</button>
     </div>
   </header>
-
-  <!-- Toolbar -->
   <div class="toolbar" id="toolbar">
     <button class="btn btn-outline btn-sm" id="btn-filter">筛选</button>
     <button class="btn btn-outline btn-sm" id="btn-sort">
@@ -460,13 +431,9 @@ input,textarea,select{user-select:text}
     </button>
     <button class="btn btn-outline btn-sm" id="btn-export">导出</button>
   </div>
-
-  <!-- Content -->
   <div class="content" id="list-content">
     <div id="list-render"></div>
   </div>
-
-  <!-- FAB -->
   <button class="fab" id="fab-add" title="快速记录灵感">+</button>
 </div>
 
@@ -495,7 +462,7 @@ input,textarea,select{user-select:text}
 
 </div><!-- /app -->
 
-<!-- ====== MODALS (portaled outside app for proper stacking) ====== -->
+<!-- ====== MODALS ====== -->
 
 <!-- Quick Add / Edit Modal -->
 <div class="modal-overlay" id="modal-add" style="display:none">
@@ -558,9 +525,7 @@ input,textarea,select{user-select:text}
 <!-- Delete Confirm Modal -->
 <div class="modal-overlay" id="modal-confirm" style="display:none">
 <div class="modal" style="max-height:auto">
-  <div class="modal-header">
-    <div class="modal-title">确认删除</div>
-  </div>
+  <div class="modal-header"><div class="modal-title">确认删除</div></div>
   <div class="modal-body" style="text-align:center;padding:24px">
     <p style="font-size:15px;margin-bottom:8px">确定要删除这条灵感吗？</p>
     <p style="font-size:13px;color:var(--text-secondary)">删除后无法恢复</p>
@@ -572,37 +537,28 @@ input,textarea,select{user-select:text}
 </div>
 </div>
 
-<!-- Toast container -->
 <div class="toast" id="toast" style="display:none"></div>
 
-<!-- SheetJS CDN -->
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js">
-</script>
-<!-- CloudBase SDK -->
-<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js">
-</script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
-// ==================== CLOUDBASE CONFIG ====================
-const CLOUDBASE_ENV = 'yxy-d5g29np8la45b46b6';
-const CLOUDBASE_KEY = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3l4eS1kNWcyOW5wOGxhNDViNDZiNi5hcC1zaGFuZ2hhaS50Y2ItYXBpLnRlbmNlbnRjbG91ZGFwaS5jb20iLCJzdWIiOiJhbm9uIiwiYXVkIjoieXh5LWQ1ZzI5bnA4bGE0NWI0NmI2IiwiZXhwIjo0MDg1ODMwODI5LCJpYXQiOjE3ODIxNDc2MjksIm5vbmNlIjoiUG1jTnBCN1dSS3F0TEIyblFrUk45QSIsImF0X2hhc2giOiJQbWNOcEI3V1JLcXRMQjJuUWtSTjlBIiwibmFtZSI6IkFub255bW91cyIsInNjb3BlIjoiYW5vbnltb3VzIiwicHJvamVjdF9pZCI6Inl4eS1kNWcyOW5wOGxhNDViNDZiNiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.GSLI9TExsIRUMgQqMwSXKipZ6wfg584JY6ARuLHGcGn4qUVcHLcTjbSpBH_S3yqqVqC7TpuVn3ZEAbgfpxH3lz5c9yOh19tse5DlpRa_7wbEsHvKa-2xsFtTYKVZmQuOmACf08qlg1MITlsH33BKGSmBydbjhjn9SEnPPEBH16lqYGwtExKYbQWfhvxiqHWNKTYreosc3YeV5yoqxRkPkiCdd94xJbO3GtQqJ58uDhRFMn93yDLy7Yy6P4uDw_dFTuqANiKyDR74Ivw347qe7En_iQdRWrogcpQCj-XFjfhdP_DO_bJrbHHAHXfeeTFboeCsT28LQnauhs_oVNPOLw';
+// ==================== SUPABASE CONFIG ====================
+const SUPABASE_URL='https://bvccnugvyidgpobalzbj.supabase.co';
+const SUPABASE_KEY='sb_publishable_n6HRNk6Ud-nzKJ74c5R-Jw_qBNByVFZ';
 
 // ==================== DATA STORE ====================
-const STORAGE_KEY = 'inspiration_app_data';
-const SETTINGS_KEY = 'inspiration_app_settings';
-
-let DATA = {inspirations:[],tags:[],tagColors:{}};
-let SETTINGS = {sortOrder:'desc'};
-let CLOUD_READY = false;
-let cloudDB = null;
+const STORAGE_KEY='inspiration_app_data';
+const SETTINGS_KEY='inspiration_app_settings';
+let DATA={inspirations:[],tags:[],tagColors:{}};
+let SETTINGS={sortOrder:'desc'};
+let CLOUD_READY=false;
+let sb=null;
 
 function loadLocal(){
-  let d;
-  try{d=JSON.parse(localStorage.getItem(STORAGE_KEY))}catch(e){}
+  let d;try{d=JSON.parse(localStorage.getItem(STORAGE_KEY))}catch(e){}
   if(!d||!d.inspirations)d={inspirations:[],tags:[],tagColors:{}};
-  if(!d.tagColors)d.tagColors={};
-  if(!d.tags)d.tags=[];
-  return d;
+  if(!d.tagColors)d.tagColors={};if(!d.tags)d.tags=[];return d;
 }
 function saveLocal(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d))}
 function loadLocalSettings(){
@@ -610,30 +566,21 @@ function loadLocalSettings(){
   catch(e){return{sortOrder:'desc'}}
 }
 function saveLocalSettings(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
-
 function saveData(d){
-  DATA = d;
-  saveLocal(d);
+  DATA=d;saveLocal(d);
   if(CLOUD_READY)saveCloudDebounced();
 }
-
-// Debounced cloud save for auto-save
 let saveCloudTimer=null;
 function saveCloudDebounced(){
   clearTimeout(saveCloudTimer);
-  saveCloudTimer=setTimeout(async()=>{
-    await doCloudSave();
-  },1500);
+  saveCloudTimer=setTimeout(async()=>{await doCloudSave();},1500);
 }
-
-// Immediate cloud save for manual operations
 async function saveCloudNow(){
   clearTimeout(saveCloudTimer);
   await doCloudSave();
 }
 
-function mergeData(localData, cloudData){
-  // Merge inspiration arrays: keep newest version of each id
+function mergeData(localData,cloudData){
   const map={};
   (localData.inspirations||[]).forEach(i=>{map[i.id]=i});
   (cloudData.inspirations||[]).forEach(i=>{
@@ -641,7 +588,6 @@ function mergeData(localData, cloudData){
   });
   const merged=Object.values(map);
   merged.sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));
-  // Merge tags (union) and tagColors (keep most recent)
   const tags=[...new Set([...(cloudData.tags||[]),...(localData.tags||[])])];
   const tagColors={...(cloudData.tagColors||{}),...(localData.tagColors||{})};
   return {inspirations:merged,tags,tagColors};
@@ -650,96 +596,78 @@ function mergeData(localData, cloudData){
 async function doCloudSave(){
   if(!CLOUD_READY)return;
   try{
-    // Load latest cloud data first to merge
-    const res=await cloudDB.collection('user_data').doc('my_inspirations').get();
-    if(res.data&&res.data.length>0&&res.data[0].payload){
-      DATA=mergeData(DATA,res.data[0].payload);
+    const {data:existing}=await sb.from('user_data').select('payload').eq('id',1).single();
+    if(existing&&existing.payload){
+      DATA=mergeData(DATA,existing.payload);
       saveLocal(DATA);
     }
-    // Save merged result
-    await cloudDB.collection('user_data').doc('my_inspirations').set({payload:DATA,updatedAt:Date.now()});
+    await sb.from('user_data').upsert({id:1,payload:DATA,updated_at:new Date().toISOString()});
     console.log('[Sync] Cloud save OK, inspirations:',DATA.inspirations.length);
-  }catch(e){
-    console.error('[Sync] Cloud save FAILED:', e.message);
-  }
+  }catch(e){console.error('[Sync] Cloud save FAILED:',e.message);}
 }
 
 async function loadCloud(){
   try{
     console.log('[Sync] Loading cloud data...');
-    const res=await cloudDB.collection('user_data').doc('my_inspirations').get();
-    console.log('[Sync] Cloud response:', JSON.stringify(res).substring(0,200));
-    if(res.data&&res.data.length>0&&res.data[0].payload){
-      DATA=mergeData(DATA,res.data[0].payload);
-      if(!DATA.tagColors)DATA.tagColors={};
-      if(!DATA.tags)DATA.tags=[];
+    const {data,error}=await sb.from('user_data').select('payload').eq('id',1).single();
+    if(error)throw error;
+    if(data&&data.payload){
+      DATA=mergeData(DATA,data.payload);
+      if(!DATA.tagColors)DATA.tagColors={};if(!DATA.tags)DATA.tags=[];
       saveLocal(DATA);
-      console.log('[Sync] Cloud data loaded, inspirations:', DATA.inspirations.length);
+      console.log('[Sync] Cloud data loaded, inspirations:',DATA.inspirations.length);
       return true;
     }
-    console.log('[Sync] No cloud data found (empty or new)');
-  }catch(e){
-    console.error('[Sync] Cloud load FAILED:', e.message);
-  }
+    console.log('[Sync] No cloud data yet');
+  }catch(e){console.error('[Sync] Cloud load FAILED:',e.message);}
   return false;
 }
 
-async function initCloudBase(){
-  console.log('[Sync] Starting CloudBase init, env:', CLOUDBASE_ENV);
+async function initCloud(){
+  console.log('[Sync] Starting Supabase init');
   try{
-    if(typeof cloudbase==='undefined'){
-      console.log('[Sync] CloudBase SDK not loaded');
-      return;
-    }
-    console.log('[Sync] SDK loaded, initializing with PublishableKey...');
-    const app=cloudbase.init({env:CLOUDBASE_ENV,accessKey:CLOUDBASE_KEY});
-    cloudDB=app.database();
-    console.log('[Sync] Loading cloud data...');
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    console.log('[Sync] Supabase client created');
     const loaded=await loadCloud();
     if(!loaded){
       const local=loadLocal();
       if(local.inspirations&&local.inspirations.length>0){
         DATA=local;
-        await cloudDB.collection('user_data').doc('my_inspirations').set({payload:DATA,updatedAt:Date.now()});
+        await sb.from('user_data').upsert({id:1,payload:DATA,updated_at:new Date().toISOString()});
         console.log('[Sync] Uploaded local data to cloud');
       }
     }
     CLOUD_READY=true;
-    console.log('[Sync] CloudBase connected successfully');
-  }catch(e){
-    console.error('[Sync] CloudBase init failed:', e.message, e);
-    console.log('[Sync] Falling back to local storage only');
-  }
+    console.log('[Sync] Supabase connected successfully');
+  }catch(e){console.error('[Sync] Supabase init FAILED:',e.message);}
 }
 
 // ==================== TAG COLORS ====================
 const TAG_COLORS=[
-  {bg:'#e8dcd8',text:'#5c4038',border:'#c4a898'}, // 山岩褐
-  {bg:'#d8e0e8',text:'#384858',border:'#a0b8c8'}, // 湖水蓝
-  {bg:'#dce8d8',text:'#3d5038',border:'#a0c0a0'}, // 草甸绿
-  {bg:'#ece0d0',text:'#5c4830',border:'#d4b888'}, // 暖光金
-  {bg:'#e4d8e0',text:'#503848',border:'#c0a8b8'}, // 霞光粉
-  {bg:'#d8dce4',text:'#404858',border:'#a8b4c4'}, // 雾霭灰
-  {bg:'#e0e4d0',text:'#484838',border:'#b8c098'}, // 嫩芽绿
-  {bg:'#e0d4d0',text:'#543838',border:'#c89888'}, // 暖陶橙
-  {bg:'#d8e4e0',text:'#385048',border:'#98b8b0'}, // 浅湖青
-  {bg:'#e8e0d4',text:'#504838',border:'#c8b898'}, // 沙砾米
-  {bg:'#dce0d8',text:'#404838',border:'#b0b898'}, // 橄榄绿
-  {bg:'#e4dce0',text:'#483848',border:'#b898a8'}, // 淡紫灰
-  {bg:'#d8e0dc',text:'#384840',border:'#98b8a8'}, // 薄荷青
-  {bg:'#e8e0d8',text:'#504030',border:'#d0b890'}, // 琥珀黄
-  {bg:'#dce0e4',text:'#384050',border:'#a0b0c0'}, // 远山蓝
-  {bg:'#e4dcd8',text:'#4c3838',border:'#c8a098'}, // 枫叶棕
+  {bg:'#e8dcd8',text:'#5c4038',border:'#c4a898'},
+  {bg:'#d8e0e8',text:'#384858',border:'#a0b8c8'},
+  {bg:'#dce8d8',text:'#3d5038',border:'#a0c0a0'},
+  {bg:'#ece0d0',text:'#5c4830',border:'#d4b888'},
+  {bg:'#e4d8e0',text:'#503848',border:'#c0a8b8'},
+  {bg:'#d8dce4',text:'#404858',border:'#a8b4c4'},
+  {bg:'#e0e4d0',text:'#484838',border:'#b8c098'},
+  {bg:'#e0d4d0',text:'#543838',border:'#c89888'},
+  {bg:'#d8e4e0',text:'#385048',border:'#98b8b0'},
+  {bg:'#e8e0d4',text:'#504838',border:'#c8b898'},
+  {bg:'#dce0d8',text:'#404838',border:'#b0b898'},
+  {bg:'#e4dce0',text:'#483848',border:'#b898a8'},
+  {bg:'#d8e0dc',text:'#384840',border:'#98b8a8'},
+  {bg:'#e8e0d8',text:'#504030',border:'#d0b890'},
+  {bg:'#dce0e4',text:'#384050',border:'#a0b0c0'},
+  {bg:'#e4dcd8',text:'#4c3838',border:'#c8a098'},
 ];
 
-// Ensure all existing tags have a color assigned
 function initTagColors(){
   if(!DATA.tagColors)DATA.tagColors={};
   let changed=false;
   DATA.tags.forEach(t=>{
     if(DATA.tagColors[t]===undefined){
-      DATA.tagColors[t]=getFreeColorIndex();
-      changed=true;
+      DATA.tagColors[t]=getFreeColorIndex();changed=true;
     }
   });
   if(changed)saveData(DATA);
@@ -747,7 +675,6 @@ function initTagColors(){
 function getFreeColorIndex(){
   const used=new Set(Object.values(DATA.tagColors));
   for(let i=0;i<TAG_COLORS.length;i++){if(!used.has(i))return i}
-  // All colors used — pick least used one
   const counts={};
   for(const idx of Object.values(DATA.tagColors)){counts[idx]=(counts[idx]||0)+1}
   let minIdx=0,minCount=Infinity;
@@ -757,40 +684,30 @@ function getFreeColorIndex(){
   return minIdx;
 }
 function assignTagColor(tag){
-  if(DATA.tagColors[tag]===undefined){
-    DATA.tagColors[tag]=getFreeColorIndex();
-  }
+  if(DATA.tagColors[tag]===undefined){DATA.tagColors[tag]=getFreeColorIndex();}
 }
-
 function getTagColor(tag){
   if(!DATA.tagColors){initTagColors()}
   assignTagColor(tag);
   return TAG_COLORS[DATA.tagColors[tag]];
 }
-
 function getCardStyle(inspiration){
   if(inspiration.isPinned)return'';
-  const tags=inspiration.tags;
-  if(!tags||!tags.length)return'';
+  const tags=inspiration.tags;if(!tags||!tags.length)return'';
   const c=getTagColor(tags[0]);
-  return `border-left:4px solid ${c.border};`;
+  return`border-left:4px solid ${c.border};`;
 }
 
-// Active filters
-let filterTag = null;
-
-// Edit state
-let editingId = null;
+let filterTag=null;
+let editingId=null;
 
 // ==================== UTILS ====================
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-
 function fmtTime(ts){
   const d=new Date(ts);
   const pad=n=>String(n).padStart(2,'0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
-
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.style.display='block';t.classList.remove('out');
@@ -821,25 +738,18 @@ function showDetail(id){
 // ==================== RENDER LIST ====================
 function getFiltered(){
   let items=[...DATA.inspirations];
-  if(filterTag){
-    items=items.filter(i=>i.tags&&i.tags.includes(filterTag));
-  }
+  if(filterTag){items=items.filter(i=>i.tags&&i.tags.includes(filterTag));}
   return items;
 }
-
 function renderList(){
   const container=document.getElementById('list-render');
   let items=getFiltered();
   const pinned=items.filter(i=>i.isPinned);
   const normal=items.filter(i=>!i.isPinned);
-
-  // Sort normal items
   normal.sort((a,b)=>{
     if(SETTINGS.sortOrder==='asc')return a.createdAt-b.createdAt;
     return b.createdAt-a.createdAt;
   });
-
-  // Pinned items keep their order (most recently pinned first, or by createdAt)
   pinned.sort((a,b)=>b.createdAt-a.createdAt);
 
   if(pinned.length===0&&normal.length===0){
@@ -852,28 +762,19 @@ function renderList(){
       </div>`;
     return;
   }
-
   let html='';
-
-  // Pinned section
   if(pinned.length>0){
     html+=`<div class="section-title"><span class="dot pin"></span> 置顶灵感</div>`;
     pinned.forEach(i=>html+=cardHTML(i));
     html+=`<div style="text-align:center;padding:4px 0 0;font-size:11px;color:var(--text-muted)">点击心形置顶（最多3条）| 点击卡片编辑</div>`;
   }
-
-  // Normal section
   if(normal.length>0){
-    if(pinned.length>0){
-      html+=`<div style="margin:8px 0 12px;border-top:1px dashed var(--border)"></div>`;
-    }
+    if(pinned.length>0){html+=`<div style="margin:8px 0 12px;border-top:1px dashed var(--glass-border)"></div>`;}
     html+=`<div class="section-title"><span class="dot normal"></span> 时间线</div>`;
     normal.forEach(i=>html+=cardHTML(i));
   }
-
   container.innerHTML=html;
 
-  // Bind card click → edit, heart click → toggle pin
   container.querySelectorAll('.card').forEach(card=>{
     card.addEventListener('click',function(e){
       if(e.target.closest('.pin-heart'))return;
@@ -881,7 +782,6 @@ function renderList(){
       openEditModal(card.dataset.id);
     });
   });
-
   container.querySelectorAll('.pin-heart').forEach(heart=>{
     heart.addEventListener('click',function(e){
       e.stopPropagation();
@@ -900,20 +800,16 @@ function cardHTML(i){
     :'';
   const cardStyle=getCardStyle(i);
   const pinCls=i.isPinned?'pin-heart pinned':'pin-heart';
-  return `
+  return`
     <div class="card${i.isPinned?' pinned':''}" data-id="${i.id}" style="${cardStyle}">
       <button class="${pinCls}" data-action="pin" aria-label="${i.isPinned?'取消置顶':'置顶'}">
         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
       </button>
-      <div class="card-meta">
-        <span class="card-time">${fmtTime(i.createdAt)}</span>
-      </div>
+      <div class="card-meta"><span class="card-time">${fmtTime(i.createdAt)}</span></div>
       <div class="card-content">${esc(i.content)}</div>
-      ${tagHTML}
-      ${link}
+      ${tagHTML}${link}
     </div>`;
 }
-
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function escAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
@@ -928,7 +824,6 @@ function openAddModal(){
   document.getElementById('modal-add').style.display='flex';
   document.getElementById('input-content').focus();
 }
-
 function openEditModal(id){
   const i=DATA.inspirations.find(x=>x.id===id);
   if(!i)return;
@@ -940,12 +835,10 @@ function openEditModal(id){
   document.getElementById('edit-extra-actions').style.display='flex';
   document.getElementById('modal-add').style.display='flex';
 }
-
 function closeAddModal(){
   clearTimeout(autoSaveTimer);
   document.getElementById('modal-add').style.display='none';
 }
-
 let selectedTags=[];
 function renderTagChips(preselect){
   selectedTags=[...preselect];
@@ -953,52 +846,37 @@ function renderTagChips(preselect){
   container.innerHTML=DATA.tags.map(t=>{
     const sel=selectedTags.includes(t);
     const c=getTagColor(t);
-    let style, cls;
+    let style,cls;
     if(sel){
-      cls='chip sel';
-      style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
+      cls='chip sel';style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
     }else{
-      cls='chip';
-      style=`background:${c.bg};color:${c.text};border-color:${c.border}`;
+      cls='chip';style=`background:${c.bg};color:${c.text};border-color:${c.border}`;
     }
-    return `<span class="${cls}" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
+    return`<span class="${cls}" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
   }).join('');
   container.querySelectorAll('.chip').forEach(chip=>{
     chip.addEventListener('click',function(){
       const t=this.dataset.tag;
-      if(selectedTags.includes(t)){
-        selectedTags=selectedTags.filter(x=>x!==t);
-      }else{
-        selectedTags.push(t);
-      }
-      renderTagChips(selectedTags);
-      autoSave(); // Trigger auto-save on tag change
+      if(selectedTags.includes(t)){selectedTags=selectedTags.filter(x=>x!==t);}
+      else{selectedTags.push(t);}
+      renderTagChips(selectedTags);autoSave();
     });
   });
 }
-
-// ==================== AUTO SAVE ====================
 let autoSaveTimer=null;
 function autoSave(){
   clearTimeout(autoSaveTimer);
   autoSaveTimer=setTimeout(()=>{
     const content=document.getElementById('input-content').value.trim();
-    if(!content)return; // Don't save empty
+    if(!content)return;
     const link=document.getElementById('input-link').value.trim();
-
     if(!editingId){
-      // New inspiration — create first, then switch to edit mode
       const id=uid();
-      DATA.inspirations.push({
-        id,content,link:link||null,
-        tags:[...selectedTags],isPinned:false,
-        createdAt:Date.now(),updatedAt:Date.now()
-      });
+      DATA.inspirations.push({id,content,link:link||null,tags:[...selectedTags],isPinned:false,createdAt:Date.now(),updatedAt:Date.now()});
       editingId=id;
       document.getElementById('modal-add-title').textContent='编辑灵感';
       document.getElementById('edit-extra-actions').style.display='flex';
     }else{
-      // Edit existing
       const idx=DATA.inspirations.findIndex(x=>x.id===editingId);
       if(idx>=0){
         DATA.inspirations[idx].content=content;
@@ -1011,14 +889,11 @@ function autoSave(){
     if(document.getElementById('home-view').style.display!=='none')renderList();
   },1500);
 }
-
 function saveInspiration(){
   clearTimeout(autoSaveTimer);
   const content=document.getElementById('input-content').value.trim();
   if(!content){toast('请输入灵感内容');return;}
-
   const link=document.getElementById('input-link').value.trim();
-
   if(editingId){
     const idx=DATA.inspirations.findIndex(x=>x.id===editingId);
     if(idx>=0){
@@ -1028,95 +903,60 @@ function saveInspiration(){
       DATA.inspirations[idx].updatedAt=Date.now();
     }
   }else{
-    DATA.inspirations.push({
-      id:uid(),
-      content,
-      link:link||null,
-      tags:[...selectedTags],
-      isPinned:false,
-      createdAt:Date.now(),
-      updatedAt:Date.now()
-    });
+    DATA.inspirations.push({id:uid(),content,link:link||null,tags:[...selectedTags],isPinned:false,createdAt:Date.now(),updatedAt:Date.now()});
   }
-
   saveData(DATA);
   closeAddModal();
-  saveCloudNow(); // Immediate cloud sync
+  saveCloudNow();
   toast(editingId?'灵感已更新':'灵感已记录');
   editingId=null;
-
   if(document.getElementById('home-view').style.display!=='none')renderList();
   if(document.getElementById('detail-view').style.display!=='none'){
-    const detailContent=document.getElementById('detail-content');
-    if(detailContent.dataset&&detailContent.dataset.id){
-      renderDetail(detailContent.dataset.id);
-    }
+    const dc=document.getElementById('detail-content');
+    if(dc.dataset&&dc.dataset.id)renderDetail(dc.dataset.id);
   }
 }
-
-// Tag inline add
 function addNewTagFromModal(){
   const input=document.getElementById('input-new-tag');
   const name=input.value.trim();
   if(!name)return;
   if(DATA.tags.includes(name)){toast('标签已存在');return;}
-  DATA.tags.push(name);
-  assignTagColor(name);
-  saveData(DATA);
-  renderTagChips(selectedTags);
-  input.value='';
-  document.getElementById('tag-add-row').style.display='none';
+  DATA.tags.push(name);assignTagColor(name);
+  saveData(DATA);renderTagChips(selectedTags);
+  input.value='';document.getElementById('tag-add-row').style.display='none';
 }
 
 // ==================== FILTER ====================
 function openFilterModal(){
-  const tagContainer=document.getElementById('filter-tags');
-  tagContainer.innerHTML=DATA.tags.map(t=>{
+  const tc=document.getElementById('filter-tags');
+  tc.innerHTML=DATA.tags.map(t=>{
     const sel=filterTag===t;
-    const style=sel?'':`background:${getTagColor(t).bg};color:${getTagColor(t).text};border-color:${getTagColor(t).border}`;
-    return `<span class="chip${sel?' selected':''}" data-tag="${escAttr(t)}" style="${style}">#${esc(t)}</span>`;
+    const c=getTagColor(t);
+    const style=sel?'':`background:${c.bg};color:${c.text};border-color:${c.border}`;
+    return`<span class="chip${sel?' selected':''}" data-tag="${escAttr(t)}" style="${style}">#${esc(t)}</span>`;
   }).join('');
-
-  tagContainer.querySelectorAll('.chip').forEach(chip=>{
+  tc.querySelectorAll('.chip').forEach(chip=>{
     chip.addEventListener('click',function(){
       const t=this.dataset.tag;
-      if(filterTag===t){filterTag=null;}
-      else{filterTag=t;}
-      closeFilterModal();
-      applyFilter();
+      if(filterTag===t){filterTag=null;}else{filterTag=t;}
+      closeFilterModal();applyFilter();
     });
   });
-
   document.getElementById('modal-filter').style.display='flex';
 }
-
-function closeFilterModal(){
-  document.getElementById('modal-filter').style.display='none';
-}
-
-function applyFilter(){
-  closeFilterModal();
-  renderList();
-  updateFilterBadge();
-}
-
+function closeFilterModal(){document.getElementById('modal-filter').style.display='none';}
+function applyFilter(){closeFilterModal();renderList();updateFilterBadge();}
 function updateFilterBadge(){
   const btn=document.getElementById('btn-filter');
-  if(filterTag){
-    btn.classList.add('active');
-    btn.textContent='#'+filterTag;
-  }else{
-    btn.classList.remove('active');
-    btn.textContent='筛选';
-  }
+  if(filterTag){btn.classList.add('active');btn.textContent='#'+filterTag;}
+  else{btn.classList.remove('active');btn.textContent='筛选';}
 }
 
 // ==================== SORT ====================
 function toggleSort(){
   SETTINGS.sortOrder=SETTINGS.sortOrder==='desc'?'asc':'desc';
   saveLocalSettings(SETTINGS);
-  const icon=document.getElementById('sort-icon');
-  icon.className='sort-dir '+SETTINGS.sortOrder;
+  document.getElementById('sort-icon').className='sort-dir '+SETTINGS.sortOrder;
   renderList();
 }
 
@@ -1125,30 +965,23 @@ function togglePin(id){
   const i=DATA.inspirations.find(x=>x.id===id);
   if(!i)return;
   if(!i.isPinned){
-    const pinnedCount=DATA.inspirations.filter(x=>x.isPinned).length;
-    if(pinnedCount>=3){toast('最多置顶 3 条灵感');return;}
+    const pc=DATA.inspirations.filter(x=>x.isPinned).length;
+    if(pc>=3){toast('最多置顶 3 条灵感');return;}
   }
   i.isPinned=!i.isPinned;
-  saveData(DATA);
-  saveCloudNow(); // Immediate cloud sync
-  renderList();
-  toast(i.isPinned?'已置顶':'已取消置顶');
+  saveData(DATA);saveCloudNow();
+  renderList();toast(i.isPinned?'已置顶':'已取消置顶');
 }
 
 // ==================== DELETE ====================
 let deleteTargetId=null;
-function confirmDelete(id){
-  deleteTargetId=id;
-  document.getElementById('modal-confirm').style.display='flex';
-}
+function confirmDelete(id){deleteTargetId=id;document.getElementById('modal-confirm').style.display='flex';}
 function doDelete(){
   if(!deleteTargetId)return;
   DATA.inspirations=DATA.inspirations.filter(x=>x.id!==deleteTargetId);
-  saveData(DATA);
+  saveData(DATA);saveCloudNow();
   document.getElementById('modal-confirm').style.display='none';
-  deleteTargetId=null;
-  toast('灵感已删除');
-  showHome();
+  deleteTargetId=null;toast('灵感已删除');showHome();
 }
 
 // ==================== DETAIL VIEW ====================
@@ -1157,120 +990,66 @@ function renderDetail(id){
   if(!i){showHome();return;}
   const container=document.getElementById('detail-content');
   container.dataset.id=id;
-
   const tags=i.tags&&i.tags.length
     ?i.tags.map(t=>{const c=getTagColor(t);return`<span class="tag" style="background:${c.bg};color:${c.text}">#${esc(t)}</span>`}).join(' ')
     :'<span style="color:var(--text-muted);font-size:13px">无</span>';
-
   container.innerHTML=`
-    <div class="detail-field">
-      <div class="detail-field-label">灵感内容</div>
-      <div class="detail-field-value">${esc(i.content)}</div>
-    </div>
-    ${i.link?`
-    <div class="detail-field">
-      <div class="detail-field-label">溯源链接</div>
-      <a class="detail-link" href="${escAttr(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a>
-    </div>`:''}
-    <div class="detail-field">
-      <div class="detail-field-label">标签</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">${tags}</div>
-    </div>
-    <div class="detail-field">
-      <div class="detail-field-label">创建时间</div>
-      <div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.createdAt)}</div>
-    </div>
-    ${i.updatedAt!==i.createdAt?`
-    <div class="detail-field">
-      <div class="detail-field-label">最后更新</div>
-      <div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.updatedAt)}</div>
-    </div>`:''}
-    <div class="detail-field">
-      <div class="detail-field-label">置顶状态</div>
-      <div class="detail-field-value">${i.isPinned?'已置顶':'未置顶'}</div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+    <div class="detail-field"><div class="detail-field-label">灵感内容</div><div class="detail-field-value">${esc(i.content)}</div></div>
+    ${i.link?`<div class="detail-field"><div class="detail-field-label">溯源链接</div><a class="detail-link" href="${escAttr(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}
+    <div class="detail-field"><div class="detail-field-label">标签</div><div style="display:flex;gap:6px;flex-wrap:wrap">${tags}</div></div>
+    <div class="detail-field"><div class="detail-field-label">创建时间</div><div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.createdAt)}</div></div>
+    ${i.updatedAt!==i.createdAt?`<div class="detail-field"><div class="detail-field-label">最后更新</div><div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.updatedAt)}</div></div>`:''}
+    <div class="detail-field"><div class="detail-field-label">置顶状态</div><div class="detail-field-value">${i.isPinned?'已置顶':'未置顶'}</div></div>
+    <div style="display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--glass-border)">
       <button class="btn btn-outline" id="btn-detail-pin" style="flex:1;justify-content:center;gap:6px">
         <svg viewBox="0 0 24 24" width="16" height="16" style="fill:${i.isPinned?'var(--accent)':'none'};stroke:${i.isPinned?'var(--accent)':'var(--text-muted)'};stroke-width:1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         ${i.isPinned?'取消置顶':'置顶'}
       </button>
       <button class="btn btn-outline" id="btn-detail-edit" style="flex:1;justify-content:center">编辑</button>
-    </div>
-  `;
-
-  // Bind actions
-  document.getElementById('btn-detail-pin').addEventListener('click',()=>{
-    togglePin(i.id);
-    renderDetail(i.id);
-  });
-  document.getElementById('btn-detail-edit').addEventListener('click',()=>{
-    // Go back to home first, then open edit modal
-    showHome();
-    setTimeout(()=>openEditModal(i.id),150);
-  });
-  document.getElementById('btn-edit-mode').addEventListener('click',()=>{
-    showHome();
-    setTimeout(()=>openEditModal(i.id),150);
-  });
-  document.getElementById('btn-detail-delete').addEventListener('click',()=>{
-    confirmDelete(i.id);
-  });
+    </div>`;
+  document.getElementById('btn-detail-pin').addEventListener('click',()=>{togglePin(i.id);renderDetail(i.id);});
+  document.getElementById('btn-detail-edit').addEventListener('click',()=>{showHome();setTimeout(()=>openEditModal(i.id),150);});
+  document.getElementById('btn-edit-mode').addEventListener('click',()=>{showHome();setTimeout(()=>openEditModal(i.id),150);});
+  document.getElementById('btn-detail-delete').addEventListener('click',()=>{confirmDelete(i.id);});
 }
 
 // ==================== MANAGEMENT ====================
 function renderMgmt(){
   const container=document.getElementById('mgmt-content');
   const counts={};
-  DATA.inspirations.forEach(i=>{
-    if(i.tags)i.tags.forEach(t=>{counts[t]=(counts[t]||0)+1});
-  });
-
+  DATA.inspirations.forEach(i=>{if(i.tags)i.tags.forEach(t=>{counts[t]=(counts[t]||0)+1});});
   container.innerHTML=`
     ${DATA.tags.length===0?'<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px">暂无标签，请添加</div>':''}
-    ${DATA.tags.map(t=>{
-      const c=getTagColor(t);
-      return `
+    ${DATA.tags.map(t=>{const c=getTagColor(t);return`
       <div class="mgmt-item">
         <span class="mgmt-item-name">
           <span class="tag" style="background:${c.bg};color:${c.text}">#${esc(t)}</span>
           <span class="mgmt-usage">(${counts[t]||0}条)</span>
         </span>
         <button class="mgmt-item-delete" data-tag="${escAttr(t)}">✕</button>
-      </div>`;
-    }).join('')}
+      </div>`;}).join('')}
     <div class="mgmt-add-row">
       <input class="form-input" id="input-new-tag-mgmt" type="text" placeholder="输入标签名称">
       <button class="btn btn-primary btn-sm" id="btn-add-tag-mgmt">添加</button>
-    </div>
-  `;
-
-  // Bind delete
+    </div>`;
   container.querySelectorAll('.mgmt-item-delete').forEach(btn=>{
     btn.addEventListener('click',function(){
       const tag=this.dataset.tag;
       DATA.tags=DATA.tags.filter(t=>t!==tag);
-      DATA.inspirations.forEach(i=>{
-        if(i.tags)i.tags=i.tags.filter(t=>t!==tag);
-      });
+      DATA.inspirations.forEach(i=>{if(i.tags)i.tags=i.tags.filter(t=>t!==tag);});
       if(filterTag===tag){filterTag=null;updateFilterBadge()}
-      saveData(DATA);
-      renderMgmt();
-      renderList();
+      saveData(DATA);saveCloudNow();renderMgmt();renderList();
       toast(`标签"${tag}"已删除`);
     });
   });
-
   document.getElementById('btn-add-tag-mgmt').addEventListener('click',()=>{
     const input=document.getElementById('input-new-tag-mgmt');
     const name=input.value.trim();
     if(!name)return;
     if(DATA.tags.includes(name)){toast('标签已存在');return}
-    DATA.tags.push(name);
-    assignTagColor(name);
-    saveData(DATA);
-    renderMgmt();
-    input.value='';
-    toast('标签已添加');
+    DATA.tags.push(name);assignTagColor(name);
+    saveData(DATA);saveCloudNow();renderMgmt();
+    input.value='';toast('标签已添加');
   });
 }
 
@@ -1278,19 +1057,9 @@ function renderMgmt(){
 function exportExcel(){
   const items=getFiltered();
   if(items.length===0){toast('没有可导出的数据');return}
-
-  const data=items.map(i=>({
-    '文字内容':i.content,
-    '网页链接':i.link||'',
-    '创建时间':fmtTime(i.createdAt),
-    '标签':(i.tags||[]).join(', '),
-    '置顶状态':i.isPinned?'是':'否'
-  }));
-
+  const data=items.map(i=>({'文字内容':i.content,'网页链接':i.link||'','创建时间':fmtTime(i.createdAt),'标签':(i.tags||[]).join(', '),'置顶状态':i.isPinned?'是':'否'}));
   const ws=XLSX.utils.json_to_sheet(data);
-  ws['!cols']=[
-    {wch:40},{wch:30},{wch:18},{wch:20},{wch:10}
-  ];
+  ws['!cols']=[{wch:40},{wch:30},{wch:18},{wch:20},{wch:10}];
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'灵感数据');
   XLSX.writeFile(wb,`灵感数据_${new Date().toISOString().slice(0,10)}.xlsx`);
@@ -1299,106 +1068,41 @@ function exportExcel(){
 
 // ==================== EVENT BINDINGS ====================
 function init(){
-  // Load local data first for instant display
-  DATA = loadLocal();
-  SETTINGS = loadLocalSettings();
-  
-  // Ensure all existing tags have colors
+  DATA=loadLocal();SETTINGS=loadLocalSettings();
   initTagColors();
-
-  // Navigation
   document.getElementById('btn-mgmt').addEventListener('click',showMgmt);
   document.getElementById('btn-mgmt-back').addEventListener('click',showHome);
   document.getElementById('btn-detail-back').addEventListener('click',showHome);
-
-  // FAB
   document.getElementById('fab-add').addEventListener('click',openAddModal);
-
-  // Auto-save on content & link change
   document.getElementById('input-content').addEventListener('input',autoSave);
   document.getElementById('input-link').addEventListener('input',autoSave);
-
-  // Add modal
   document.getElementById('btn-close-add').addEventListener('click',closeAddModal);
   document.getElementById('btn-save').addEventListener('click',saveInspiration);
-  document.getElementById('btn-new-tag').addEventListener('click',()=>{
-    document.getElementById('tag-add-row').style.display='flex';
-    document.getElementById('input-new-tag').focus();
-  });
+  document.getElementById('btn-new-tag').addEventListener('click',()=>{document.getElementById('tag-add-row').style.display='flex';document.getElementById('input-new-tag').focus();});
   document.getElementById('btn-confirm-tag').addEventListener('click',addNewTagFromModal);
-  document.getElementById('input-new-tag').addEventListener('keydown',e=>{
-    if(e.key==='Enter')addNewTagFromModal();
-  });
-  // Edit extra actions
-  document.getElementById('btn-go-detail').addEventListener('click',()=>{
-    if(editingId){closeAddModal();showDetail(editingId)}
-  });
-  document.getElementById('btn-delete-from-edit').addEventListener('click',()=>{
-    if(editingId){closeAddModal();confirmDelete(editingId)}
-  });
-
-  // Close add modal on overlay click
-  document.getElementById('modal-add').addEventListener('click',function(e){
-    if(e.target===this)closeAddModal();
-  });
-
-  // Filter
+  document.getElementById('input-new-tag').addEventListener('keydown',e=>{if(e.key==='Enter')addNewTagFromModal();});
+  document.getElementById('btn-go-detail').addEventListener('click',()=>{if(editingId){closeAddModal();showDetail(editingId)}});
+  document.getElementById('btn-delete-from-edit').addEventListener('click',()=>{if(editingId){closeAddModal();confirmDelete(editingId)}});
+  document.getElementById('modal-add').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
   document.getElementById('btn-filter').addEventListener('click',openFilterModal);
   document.getElementById('btn-close-filter').addEventListener('click',closeFilterModal);
   document.getElementById('btn-apply-filter').addEventListener('click',applyFilter);
-  document.getElementById('btn-reset-tag').addEventListener('click',()=>{
-    filterTag=null;
-    applyFilter();
-  });
-  document.getElementById('modal-filter').addEventListener('click',function(e){
-    if(e.target===this)closeFilterModal();
-  });
-
-  // Sort
+  document.getElementById('btn-reset-tag').addEventListener('click',()=>{filterTag=null;applyFilter();});
+  document.getElementById('modal-filter').addEventListener('click',function(e){if(e.target===this)closeFilterModal();});
   document.getElementById('btn-sort').addEventListener('click',toggleSort);
-
-  // Export
   document.getElementById('btn-export').addEventListener('click',exportExcel);
-
-  // Delete confirm
-  document.getElementById('btn-cancel-delete').addEventListener('click',()=>{
-    document.getElementById('modal-confirm').style.display='none';
-    deleteTargetId=null;
-  });
+  document.getElementById('btn-cancel-delete').addEventListener('click',()=>{document.getElementById('modal-confirm').style.display='none';deleteTargetId=null;});
   document.getElementById('btn-confirm-delete').addEventListener('click',doDelete);
-  document.getElementById('modal-confirm').addEventListener('click',function(e){
-    if(e.target===this){document.getElementById('modal-confirm').style.display='none';deleteTargetId=null}
-  });
-
-  // Mgmt keyboard: Enter to add tag
-  document.getElementById('mgmt-content').addEventListener('keydown',function(e){
-    if(e.key==='Enter'){
-      const addTag=document.getElementById('btn-add-tag-mgmt');
-      if(addTag)addTag.click();
-    }
-  });
-
-  // Init sort icon
+  document.getElementById('modal-confirm').addEventListener('click',function(e){if(e.target===this){document.getElementById('modal-confirm').style.display='none';deleteTargetId=null}});
+  document.getElementById('mgmt-content').addEventListener('keydown',function(e){if(e.key==='Enter'){const addTag=document.getElementById('btn-add-tag-mgmt');if(addTag)addTag.click();}});
   document.getElementById('sort-icon').className='sort-dir '+SETTINGS.sortOrder;
-
-  // Initial render
-  updateFilterBadge();
-  renderList();
-
-  // Async: connect CloudBase for sync
-  initCloudBase().then(()=>{
-    if(CLOUD_READY)renderList(); // Refresh with cloud data if different
-  });
+  updateFilterBadge();renderList();
+  initCloud().then(()=>{if(CLOUD_READY)renderList();});
 }
 
-// ==================== PWA REGISTRATION ====================
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-
-// ==================== BOOT ====================
+// ==================== PWA ====================
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 document.addEventListener('DOMContentLoaded',init);
 </script>
-
 </body>
 </html>
