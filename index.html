@@ -186,6 +186,62 @@ input,textarea,select{user-select:text}
   display:flex;align-items:center;gap:8px;
   margin-bottom:10px;flex-wrap:wrap;
 }
+/* select mode */
+.card.selectable{
+  padding-left:46px;
+}
+.card.selectable:active{transform:none;box-shadow:0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.5)}
+.card-select{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:6px;
+  border:2px solid var(--glass-border-strong);
+  background:var(--glass-bg-input);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:5;
+  transition:all .2s;
+}
+.card-select.checked{
+  background:var(--primary);border-color:var(--primary);
+}
+.card-select.checked::after{
+  content:'';width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;
+  transform:rotate(45deg) translateY(-1px);
+}
+/* batch bar */
+.batch-bar{
+  position:fixed;bottom:calc(100px + var(--safe-bottom));left:50%;
+  transform:translateX(-50%);
+  display:flex;gap:10px;align-items:center;
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  border-radius:var(--radius-lg);
+  padding:12px 20px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.12);
+  border:1px solid var(--glass-border-strong);
+  z-index:180;white-space:nowrap;
+  animation:fadeIn .2s;
+}
+.batch-count{font-size:14px;font-weight:600;color:var(--text);min-width:30px}
+.batch-select-all{font-size:12px;color:var(--primary);cursor:pointer;white-space:nowrap}
+.batch-select-all:active{opacity:.6}
+.btn-batch-delete{
+  padding:10px 22px;border-radius:var(--radius-btn);
+  background:var(--danger);color:#fff;border:none;
+  font-size:13px;font-weight:500;cursor:pointer;
+  box-shadow:0 2px 12px rgba(224,85,85,0.3);
+  transition:all .2s;
+}
+.btn-batch-delete:active{background:#d44;transform:scale(.96)}
+.btn-batch-delete:disabled{opacity:.4;pointer-events:none}
+.btn-batch-cancel{
+  padding:10px 16px;border-radius:var(--radius-btn);
+  background:rgba(0,0,0,0.03);color:var(--text-secondary);
+  border:1px solid var(--glass-border);font-size:13px;cursor:pointer;
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.btn-batch-cancel:active{background:rgba(0,0,0,0.07)}
 .card-time{
   font-size:11px;color:var(--text-muted);
 }
@@ -430,6 +486,7 @@ input,textarea,select{user-select:text}
       <span class="sort-dir desc" id="sort-icon">↓</span> 时间
     </button>
     <button class="btn btn-outline btn-sm" id="btn-export">导出</button>
+    <button class="btn btn-outline btn-sm" id="btn-batch" style="margin-left:auto">批量管理</button>
   </div>
   <div class="content" id="list-content">
     <div id="list-render"></div>
@@ -539,6 +596,15 @@ input,textarea,select{user-select:text}
 
 <div class="toast" id="toast" style="display:none"></div>
 
+<!-- Batch Action Bar -->
+<div class="batch-bar" id="batch-bar" style="display:none">
+  <span class="batch-count" id="batch-count">0</span>
+  <span style="font-size:13px;color:var(--text-secondary)">条已选</span>
+  <span class="batch-select-all" id="batch-select-all">全选</span>
+  <button class="btn-batch-delete" id="btn-batch-delete" disabled>删除选中</button>
+  <button class="btn-batch-cancel" id="btn-batch-cancel">取消</button>
+</div>
+
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
@@ -558,7 +624,9 @@ let sb=null;
 function loadLocal(){
   let d;try{d=JSON.parse(localStorage.getItem(STORAGE_KEY))}catch(e){}
   if(!d||!d.inspirations)d={inspirations:[],tags:[],tagColors:{}};
-  if(!d.tagColors)d.tagColors={};if(!d.tags)d.tags=[];return d;
+  if(!d.tagColors)d.tagColors={};if(!d.tags)d.tags=[];
+  if(!d.deletedIds)d.deletedIds=[];if(!d.deletedTags)d.deletedTags=[];
+  return d;
 }
 function saveLocal(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d))}
 function loadLocalSettings(){
@@ -581,16 +649,34 @@ async function saveCloudNow(){
 }
 
 function mergeData(localData,cloudData){
+  // 墓碑：合并双方的已删除 ID 列表
+  const delIds=new Set([...(localData.deletedIds||[]),...(cloudData.deletedIds||[])]);
+  const delTags=new Set([...(localData.deletedTags||[]),...(cloudData.deletedTags||[])]);
+  // 合并灵感：排除墓碑中的 ID，updatedAt 较新者胜
   const map={};
-  (localData.inspirations||[]).forEach(i=>{map[i.id]=i});
+  (localData.inspirations||[]).forEach(i=>{if(!delIds.has(i.id))map[i.id]=i});
   (cloudData.inspirations||[]).forEach(i=>{
+    if(delIds.has(i.id))return;
     if(!map[i.id]||(i.updatedAt||0)>(map[i.id].updatedAt||0))map[i.id]=i;
   });
   const merged=Object.values(map);
   merged.sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));
-  const tags=[...new Set([...(cloudData.tags||[]),...(localData.tags||[])])];
+  // 合并标签：排除墓碑，取并集
+  const tags=[...new Set([
+    ...(cloudData.tags||[]).filter(t=>!delTags.has(t)),
+    ...(localData.tags||[]).filter(t=>!delTags.has(t))
+  ])];
+  // 合并标签颜色（本地优先），清理墓碑中的颜色
   const tagColors={...(cloudData.tagColors||{}),...(localData.tagColors||{})};
-  return {inspirations:merged,tags,tagColors};
+  delTags.forEach(t=>delete tagColors[t]);
+  // 清理墓碑中已不存在于双方数据中的 ID（节省空间）
+  const allLocalIds=new Set((localData.inspirations||[]).map(i=>i.id));
+  const allCloudIds=new Set((cloudData.inspirations||[]).map(i=>i.id));
+  const cleanDelIds=[...delIds].filter(id=>allLocalIds.has(id)||allCloudIds.has(id));
+  const cleanDelTags=[...delTags].filter(t=>
+    (localData.tags||[]).includes(t)||(cloudData.tags||[]).includes(t)
+  );
+  return {inspirations:merged,tags,tagColors,deletedIds:cleanDelIds,deletedTags:cleanDelTags};
 }
 
 async function doCloudSave(){
@@ -700,6 +786,8 @@ function getCardStyle(inspiration){
 
 let filterTag=null;
 let editingId=null;
+let selectMode=false;
+let selectedIds=new Set();
 
 // ==================== UTILS ====================
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
@@ -779,16 +867,30 @@ function renderList(){
     card.addEventListener('click',function(e){
       if(e.target.closest('.pin-heart'))return;
       if(e.target.closest('.card-link'))return;
+      if(e.target.closest('.card-select'))return;
+      if(selectMode){
+        toggleCardSelect(card.dataset.id);
+        return;
+      }
       openEditModal(card.dataset.id);
     });
   });
   container.querySelectorAll('.pin-heart').forEach(heart=>{
     heart.addEventListener('click',function(e){
       e.stopPropagation();
+      if(selectMode)return;
       const card=this.closest('.card');
       if(card)togglePin(card.dataset.id);
     });
   });
+  container.querySelectorAll('.card-select').forEach(sel=>{
+    sel.addEventListener('click',function(e){
+      e.stopPropagation();
+      toggleCardSelect(this.dataset.id);
+    });
+  });
+  // 更新批量栏
+  updateBatchBar();
 }
 
 function cardHTML(i){
@@ -800,8 +902,12 @@ function cardHTML(i){
     :'';
   const cardStyle=getCardStyle(i);
   const pinCls=i.isPinned?'pin-heart pinned':'pin-heart';
+  const selectHTML=selectMode
+    ?`<div class="card-select${selectedIds.has(i.id)?' checked':''}" data-id="${i.id}" data-action="select"></div>`
+    :'';
   return`
-    <div class="card${i.isPinned?' pinned':''}" data-id="${i.id}" style="${cardStyle}">
+    <div class="card${i.isPinned?' pinned':''}${selectMode?' selectable':''}" data-id="${i.id}" style="${cardStyle}">
+      ${selectHTML}
       <button class="${pinCls}" data-action="pin" aria-label="${i.isPinned?'取消置顶':'置顶'}">
         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
       </button>
@@ -960,6 +1066,67 @@ function toggleSort(){
   renderList();
 }
 
+// ==================== BATCH DELETE ====================
+function toggleSelectMode(){
+  selectMode=!selectMode;
+  selectedIds.clear();
+  document.getElementById('btn-batch').classList.toggle('active',selectMode);
+  document.getElementById('btn-batch').textContent=selectMode?'取消':'批量管理';
+  if(!selectMode){
+    document.getElementById('batch-bar').style.display='none';
+    document.getElementById('btn-filter').style.display='';
+    document.getElementById('btn-sort').style.display='';
+    document.getElementById('btn-export').style.display='';
+  }else{
+    document.getElementById('btn-filter').style.display='none';
+    document.getElementById('btn-sort').style.display='none';
+    document.getElementById('btn-export').style.display='none';
+  }
+  renderList();
+}
+function toggleCardSelect(id){
+  if(selectedIds.has(id))selectedIds.delete(id);else selectedIds.add(id);
+  renderList();
+}
+function toggleSelectAll(){
+  const items=getFiltered();
+  if(selectedIds.size===items.length){
+    selectedIds.clear();
+  }else{
+    items.forEach(i=>selectedIds.add(i.id));
+  }
+  renderList();
+}
+function updateBatchBar(){
+  const bar=document.getElementById('batch-bar');
+  if(!selectMode||selectedIds.size===0){
+    bar.style.display='none';
+    return;
+  }
+  bar.style.display='flex';
+  document.getElementById('batch-count').textContent=selectedIds.size;
+  document.getElementById('btn-batch-delete').disabled=selectedIds.size===0;
+  const items=getFiltered();
+  const allEl=document.getElementById('batch-select-all');
+  allEl.textContent=selectedIds.size===items.length?'取消全选':'全选';
+}
+function batchDelete(){
+  if(selectedIds.size===0)return;
+  if(!DATA.deletedIds)DATA.deletedIds=[];
+  selectedIds.forEach(id=>DATA.deletedIds.push(id));
+  DATA.inspirations=DATA.inspirations.filter(i=>!selectedIds.has(i.id));
+  saveData(DATA);saveCloudNow();
+  const n=selectedIds.size;
+  selectedIds.clear();selectMode=false;
+  document.getElementById('btn-batch').classList.remove('active');
+  document.getElementById('btn-batch').textContent='批量管理';
+  document.getElementById('batch-bar').style.display='none';
+  document.getElementById('btn-filter').style.display='';
+  document.getElementById('btn-sort').style.display='';
+  document.getElementById('btn-export').style.display='';
+  renderList();toast(`已删除 ${n} 条灵感`);
+}
+
 // ==================== PIN ====================
 function togglePin(id){
   const i=DATA.inspirations.find(x=>x.id===id);
@@ -968,7 +1135,7 @@ function togglePin(id){
     const pc=DATA.inspirations.filter(x=>x.isPinned).length;
     if(pc>=3){toast('最多置顶 3 条灵感');return;}
   }
-  i.isPinned=!i.isPinned;
+  i.isPinned=!i.isPinned;i.updatedAt=Date.now();
   saveData(DATA);saveCloudNow();
   renderList();toast(i.isPinned?'已置顶':'已取消置顶');
 }
@@ -978,6 +1145,8 @@ let deleteTargetId=null;
 function confirmDelete(id){deleteTargetId=id;document.getElementById('modal-confirm').style.display='flex';}
 function doDelete(){
   if(!deleteTargetId)return;
+  if(!DATA.deletedIds)DATA.deletedIds=[];
+  DATA.deletedIds.push(deleteTargetId);
   DATA.inspirations=DATA.inspirations.filter(x=>x.id!==deleteTargetId);
   saveData(DATA);saveCloudNow();
   document.getElementById('modal-confirm').style.display='none';
@@ -1035,6 +1204,8 @@ function renderMgmt(){
   container.querySelectorAll('.mgmt-item-delete').forEach(btn=>{
     btn.addEventListener('click',function(){
       const tag=this.dataset.tag;
+      if(!DATA.deletedTags)DATA.deletedTags=[];
+      DATA.deletedTags.push(tag);
       DATA.tags=DATA.tags.filter(t=>t!==tag);
       DATA.inspirations.forEach(i=>{if(i.tags)i.tags=i.tags.filter(t=>t!==tag);});
       if(filterTag===tag){filterTag=null;updateFilterBadge()}
@@ -1091,6 +1262,10 @@ function init(){
   document.getElementById('modal-filter').addEventListener('click',function(e){if(e.target===this)closeFilterModal();});
   document.getElementById('btn-sort').addEventListener('click',toggleSort);
   document.getElementById('btn-export').addEventListener('click',exportExcel);
+  document.getElementById('btn-batch').addEventListener('click',toggleSelectMode);
+  document.getElementById('btn-batch-delete').addEventListener('click',batchDelete);
+  document.getElementById('btn-batch-cancel').addEventListener('click',toggleSelectMode);
+  document.getElementById('batch-select-all').addEventListener('click',toggleSelectAll);
   document.getElementById('btn-cancel-delete').addEventListener('click',()=>{document.getElementById('modal-confirm').style.display='none';deleteTargetId=null;});
   document.getElementById('btn-confirm-delete').addEventListener('click',doDelete);
   document.getElementById('modal-confirm').addEventListener('click',function(e){if(e.target===this){document.getElementById('modal-confirm').style.display='none';deleteTargetId=null}});
