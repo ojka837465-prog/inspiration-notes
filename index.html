@@ -6,12 +6,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Inspiration">
-<meta name="theme-color" content="#7c6ba0">
+<meta name="theme-color" content="#c89828">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;500&display=swap" rel="stylesheet">
 <title>灵感速记</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -73,24 +73,24 @@ input,textarea,select{user-select:text}
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
   border-bottom:1px solid var(--glass-border);
-  padding:16px 18px 14px;
+  padding:18px 18px 14px;
 }
 .header-top{
   display:flex;align-items:center;justify-content:space-between;
 }
 .header-title{
-  font-family:'Playfair Display','Georgia','Times New Roman',serif;
-  font-size:30px;font-weight:700;font-style:italic;
-  background:linear-gradient(135deg,#6b5ce7,#8b7cf0,#a78bfa,#c4b5fd);
+  font-family:'Great Vibes','Dancing Script','Georgia',cursive;
+  font-size:34px;font-weight:400;
+  background:linear-gradient(135deg,#b8960f,#d4a845,#e8c860,#d4a845);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
-  letter-spacing:.5px;
-  position:relative;
+  letter-spacing:1.5px;
+  position:relative;line-height:1.15;
 }
 .header-title::after{
-  content:'';display:block;width:32px;height:2px;
-  background:linear-gradient(90deg,#a78bfa,transparent);
-  margin-top:3px;border-radius:2px;
+  content:'';display:block;width:36px;height:1.5px;
+  background:linear-gradient(90deg,#d4a845,transparent);
+  margin-top:2px;border-radius:1px;
 }
 .header-menu{
   width:40px;height:40px;border-radius:50%;
@@ -113,7 +113,7 @@ input,textarea,select{user-select:text}
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
   border-bottom:1px solid var(--glass-border);
-  position:sticky;top:72px;z-index:99;
+  position:sticky;top:76px;z-index:99;
   overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
 .toolbar::-webkit-scrollbar{display:none}
@@ -156,35 +156,43 @@ input,textarea,select{user-select:text}
 .section-title .dot.pin{background:var(--accent);box-shadow:0 0 6px var(--accent-glow)}
 .section-title .dot.normal{background:var(--text-muted)}
 
+/* ===== Swipe Wrapper ===== */
+.swipe-wrapper{
+  position:relative;overflow:hidden;
+  border-radius:var(--radius);
+  margin-bottom:12px;
+}
+.swipe-delete-bg{
+  position:absolute;left:0;top:0;bottom:0;width:72px;
+  background:linear-gradient(135deg,#e05555,#d44);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border-radius:var(--radius) 0 0 var(--radius);
+  z-index:0;
+}
+.swipe-delete-bg svg{width:22px;height:22px;stroke:#fff}
+
 /* ===== Cards ===== */
 .card{
   background:var(--glass-bg-card);
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
-  border-radius:var(--radius);
-  margin-bottom:12px;
+  padding:16px 18px;
   box-shadow:0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.5);
-  position:relative;z-index:1;overflow:hidden;
+  position:relative;z-index:1;
   border:1px solid var(--glass-border);
-  transition:box-shadow .25s cubic-bezier(.25,.8,.25,1);
+  transition:transform .25s cubic-bezier(.25,.8,.25,1);
   cursor:pointer;
   touch-action:pan-y;
   -webkit-touch-callout:none;
+  border-radius:var(--radius);
 }
-.card:active{box-shadow:0 1px 6px rgba(0,0,0,0.1)}
-.card.swiped .card-inner{transform:translateX(72px)}
-.card-inner{
-  padding:16px 18px;position:relative;z-index:2;
-  transition:transform .22s cubic-bezier(.25,.8,.25,1);
-  touch-action:pan-y;
+.card:active{transform:scale(.985)}
+.card.swiped{transform:translateX(72px);border-radius:0 var(--radius) var(--radius) 0}
+.card.swiped::after{
+  content:'';position:absolute;left:-72px;top:0;bottom:0;width:72px;
+  background:var(--glass-bg-card);z-index:3;
+  border-radius:var(--radius) 0 0 var(--radius);
 }
-.swipe-delete{
-  position:absolute;left:0;top:0;bottom:0;width:72px;
-  background:linear-gradient(135deg,#e05555,#d44);
-  display:flex;align-items:center;justify-content:center;
-  z-index:1;cursor:pointer;border-radius:var(--radius) 0 0 var(--radius);
-}
-.swipe-delete svg{width:22px;height:22px;stroke:#fff}
 .card.pinned{
   background:var(--pinned-bg);
   border-color:rgba(200,152,40,0.35);
@@ -926,7 +934,7 @@ function renderList(){
     card.addEventListener('click',function(e){
       if(e.target.closest('.pin-heart'))return;
       if(e.target.closest('.card-select'))return;
-      if(e.target.closest('.swipe-delete'))return;
+      if(e.target.closest('.swipe-delete-bg'))return;
       if(card.classList.contains('swiped')){
         card.classList.remove('swiped');
         return;
@@ -953,38 +961,36 @@ function renderList(){
     });
   });
   // 左滑删除
-  container.querySelectorAll('.card').forEach(card=>{
+  container.querySelectorAll('.swipe-wrapper').forEach(wrapper=>{
     if(selectMode)return;
-    let startX=0,startY=0,sx=0,stracking=false;
-    card.addEventListener('touchstart',function(e){
-      const t=e.touches[0];
-      startX=t.clientX;startY=t.clientY;
-      card.classList.contains('swiped')?card.classList.remove('swiped'):null;
-      stracking=true;sx=0;
+    const card=wrapper.querySelector('.card');
+    if(!card)return;
+    let sx=0,startX=0,stracking=false;
+    wrapper.addEventListener('touchstart',function(e){
+      startX=e.touches[0].clientX;sx=0;stracking=true;
+      if(card.classList.contains('swiped')){
+        card.classList.remove('swiped');startX+=72;
+      }
     },{passive:true});
-    card.addEventListener('touchmove',function(e){
+    wrapper.addEventListener('touchmove',function(e){
       if(!stracking)return;
-      const dy=Math.abs(e.touches[0].clientY-startY);
       const dx=e.touches[0].clientX-startX;
-      if(dy>8&&Math.abs(dx)<dy){stracking=false;return;}
-      if(dx>5)return;
+      if(dx>5){stracking=false;card.classList.remove('swiped');return;}
       sx=Math.max(dx,-72);
-      card.querySelector('.card-inner').style.transition='none';
-      card.querySelector('.card-inner').style.transform=`translateX(${-sx}px)`;
+      card.style.transition='none';
+      card.style.transform=`translateX(${Math.abs(sx)}px)`;
     },{passive:true});
-    card.addEventListener('touchend',function(){
-      if(!stracking){stracking=false;return;}stracking=false;
-      const inner=card.querySelector('.card-inner');
-      inner.style.transition='';
-      inner.style.transform='';
+    wrapper.addEventListener('touchend',function(){
+      if(!stracking)return;stracking=false;
+      card.style.transition='';
+      card.style.transform='';
       if(sx<-40){card.classList.add('swiped');}
       else{card.classList.remove('swiped');}
-      sx=0;
     });
-    // swipe-delete click
-    const delBtn=card.querySelector('.swipe-delete');
-    if(delBtn){
-      delBtn.addEventListener('click',function(e){
+    // 删除按钮点击
+    const delBg=wrapper.querySelector('.swipe-delete-bg');
+    if(delBg){
+      delBg.addEventListener('click',function(e){
         e.stopPropagation();
         confirmDelete(card.dataset.id);
         card.classList.remove('swiped');
@@ -1005,11 +1011,11 @@ function cardHTML(i){
     ?`<div class="card-select${selectedIds.has(i.id)?' checked':''}" data-id="${i.id}" data-action="select"></div>`
     :'';
   return`
-    <div class="card${i.isPinned?' pinned':''}${selectMode?' selectable':''}" data-id="${i.id}" style="${cardStyle}">
-      <div class="swipe-delete" data-action="swipe-delete">
+    <div class="swipe-wrapper">
+      <div class="swipe-delete-bg" data-action="swipe-delete">
         <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
       </div>
-      <div class="card-inner">
+      <div class="card${i.isPinned?' pinned':''}${selectMode?' selectable':''}" data-id="${i.id}" style="${cardStyle}">
       ${selectHTML}
       <button class="${pinCls}" data-action="pin" aria-label="${i.isPinned?'取消置顶':'置顶'}">
         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
