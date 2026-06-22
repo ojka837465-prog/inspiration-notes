@@ -639,12 +639,15 @@ function saveData(d){
   if(CLOUD_READY)saveCloudDebounced();
 }
 let saveCloudTimer=null;
+let saveCloudPending=false;
 function saveCloudDebounced(){
   clearTimeout(saveCloudTimer);
+  if(!CLOUD_READY){saveCloudPending=true;return;}
   saveCloudTimer=setTimeout(async()=>{await doCloudSave();},1500);
 }
 async function saveCloudNow(){
   clearTimeout(saveCloudTimer);
+  if(!CLOUD_READY){saveCloudPending=true;return;}
   await doCloudSave();
 }
 
@@ -687,8 +690,19 @@ async function doCloudSave(){
       DATA=mergeData(DATA,existing.payload);
       saveLocal(DATA);
     }
+    // 写入前再次合并，缩小竞态窗口
+    const {data:latest}=await sb.from('user_data').select('payload').eq('id',1).single();
+    if(latest&&latest.payload){
+      const oldTagsLen=DATA.tags.length;
+      const oldInsLen=DATA.inspirations.length;
+      DATA=mergeData(DATA,latest.payload);
+      saveLocal(DATA);
+      if(DATA.tags.length!==oldTagsLen||DATA.inspirations.length!==oldInsLen)
+        console.log('[Sync] Detected concurrent cloud changes, re-merged');
+    }
     await sb.from('user_data').upsert({id:1,payload:DATA,updated_at:new Date().toISOString()});
     console.log('[Sync] Cloud save OK, inspirations:',DATA.inspirations.length);
+    saveCloudPending=false;
   }catch(e){console.error('[Sync] Cloud save FAILED:',e.message);}
 }
 
@@ -725,6 +739,7 @@ async function initCloud(){
     }
     CLOUD_READY=true;
     console.log('[Sync] Supabase connected successfully');
+    if(saveCloudPending){console.log('[Sync] Flushing pending cloud save');saveCloudDebounced();}
   }catch(e){console.error('[Sync] Supabase init FAILED:',e.message);}
 }
 
