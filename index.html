@@ -9,6 +9,9 @@
 <meta name="theme-color" content="#e8e4de">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 <title>灵感速记</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -70,29 +73,39 @@ input,textarea,select{user-select:text}
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
   border-bottom:1px solid var(--glass-border);
-  padding:14px 18px;
+  padding:16px 18px 14px;
 }
 .header-top{
   display:flex;align-items:center;justify-content:space-between;
 }
 .header-title{
-  font-size:20px;font-weight:700;
-  background:linear-gradient(135deg,#6a5a80,#b89840);
+  font-family:'Ma Shan Zheng','Noto Serif SC','STKaiti','KaiTi',serif;
+  font-size:28px;font-weight:400;
+  background:linear-gradient(135deg,#5c4a32,#8b6f4e,#b8973c);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
-  letter-spacing:-.3px;
+  letter-spacing:4px;
+  text-shadow:none;
+  position:relative;
+}
+.header-title::after{
+  content:'';display:block;width:28px;height:2px;
+  background:linear-gradient(90deg,#b8973c,transparent);
+  margin-top:4px;border-radius:2px;
 }
 .header-menu{
-  width:38px;height:38px;border-radius:50%;
+  width:40px;height:40px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   border:1px solid var(--glass-border);
-  background:rgba(0,0,0,0.04);
-  font-size:18px;cursor:pointer;
-  color:var(--text-secondary);
+  background:var(--glass-bg-light);
+  cursor:pointer;
   backdrop-filter:var(--blur-light);
   -webkit-backdrop-filter:var(--blur-light);
+  transition:all .2s;
 }
-.header-menu:active{background:rgba(0,0,0,0.08)}
+.header-menu svg{width:18px;height:18px;stroke:var(--text-secondary);fill:none;stroke-width:2}
+.header-menu:active{background:rgba(0,0,0,0.06);transform:scale(.94)}
+.header-menu:hover svg{stroke:var(--primary)}
 
 /* ===== Toolbar ===== */
 .toolbar{
@@ -101,7 +114,7 @@ input,textarea,select{user-select:text}
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
   border-bottom:1px solid var(--glass-border);
-  position:sticky;top:62px;z-index:99;
+  position:sticky;top:72px;z-index:99;
   overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
 .toolbar::-webkit-scrollbar{display:none}
@@ -133,7 +146,7 @@ input,textarea,select{user-select:text}
 .sort-dir.asc{transform:scaleY(-1)}
 
 /* ===== Content Area ===== */
-.content{flex:1;padding:16px 18px;padding-bottom:84px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.content{flex:1;padding:16px 18px;padding-bottom:100px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .section-title{
   font-size:12px;font-weight:600;color:var(--text-muted);
   text-transform:uppercase;letter-spacing:1px;
@@ -209,7 +222,7 @@ input,textarea,select{user-select:text}
 }
 /* batch bar */
 .batch-bar{
-  position:fixed;bottom:calc(100px + var(--safe-bottom));left:50%;
+  position:fixed;bottom:calc(90px + var(--safe-bottom));left:50%;
   transform:translateX(-50%);
   display:flex;gap:10px;align-items:center;
   background:var(--glass-bg);
@@ -274,20 +287,38 @@ input,textarea,select{user-select:text}
 .empty-title{font-size:17px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
 .empty-desc{font-size:13px;color:var(--text-muted)}
 
-/* ===== FAB ===== */
-.fab{
-  position:fixed;bottom:calc(28px + var(--safe-bottom));right:18px;
-  width:58px;height:58px;border-radius:50%;
-  background:var(--primary);color:#fff;
-  border:none;font-size:30px;cursor:pointer;
-  box-shadow:0 4px 20px var(--primary-glow),0 2px 8px rgba(0,0,0,0.15);
-  display:flex;align-items:center;justify-content:center;
-  z-index:150;transition:all .2s;
-  -webkit-tap-highlight-color:transparent;
+/* ===== Bottom Input Bar ===== */
+.input-bar{
+  position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 36px);max-width:464px;
+  background:var(--glass-bg);
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
+  border-radius:var(--radius-lg);
+  padding:12px 18px;
+  display:flex;align-items:center;gap:12px;
+  border:1px solid var(--glass-border-strong);
+  box-shadow:0 4px 28px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.04);
+  z-index:150;cursor:pointer;
+  transition:all .2s;
 }
-.fab:active{transform:scale(.9);box-shadow:0 2px 12px var(--primary-glow)}
+.input-bar:active{transform:translateX(-50%) scale(.98);box-shadow:0 2px 16px rgba(0,0,0,0.06)}
+.input-bar-icon{
+  width:38px;height:38px;flex-shrink:0;
+  border-radius:50%;
+  background:var(--primary);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:22px;line-height:1;
+}
+.input-bar-text{
+  flex:1;font-size:14px;color:var(--text-muted);
+  pointer-events:none;
+}
+.input-bar-hint{
+  font-size:11px;color:var(--text-muted);opacity:.6;
+  pointer-events:none;
+}
 
 /* ===== Modal ===== */
 .modal-overlay{
@@ -477,7 +508,9 @@ input,textarea,select{user-select:text}
   <header class="header">
     <div class="header-top">
       <div class="header-title">灵感速记</div>
-      <button class="header-menu" id="btn-mgmt" title="标签管理">标签</button>
+      <button class="header-menu" id="btn-mgmt" title="标签管理">
+        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </button>
     </div>
   </header>
   <div class="toolbar" id="toolbar">
@@ -491,7 +524,11 @@ input,textarea,select{user-select:text}
   <div class="content" id="list-content">
     <div id="list-render"></div>
   </div>
-  <button class="fab" id="fab-add" title="快速记录灵感">+</button>
+  <div class="input-bar" id="input-bar">
+    <div class="input-bar-icon">+</div>
+    <div class="input-bar-text">记录此刻灵感...</div>
+    <div class="input-bar-hint">点击输入</div>
+  </div>
 </div>
 
 <!-- ====== MANAGEMENT VIEW ====== -->
@@ -541,10 +578,6 @@ input,textarea,select{user-select:text}
         <button class="btn btn-primary btn-sm" id="btn-confirm-tag">添加</button>
       </div>
       <button class="chip-add" id="btn-new-tag" style="margin-top:6px">+ 新标签</button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">溯源链接</label>
-      <input class="form-input" id="input-link" type="url" placeholder="粘贴网页链接（选填）">
     </div>
   </div>
   <div class="modal-footer">
@@ -881,7 +914,6 @@ function renderList(){
   container.querySelectorAll('.card').forEach(card=>{
     card.addEventListener('click',function(e){
       if(e.target.closest('.pin-heart'))return;
-      if(e.target.closest('.card-link'))return;
       if(e.target.closest('.card-select'))return;
       if(selectMode){
         toggleCardSelect(card.dataset.id);
@@ -912,9 +944,6 @@ function cardHTML(i){
   const tagHTML=i.tags&&i.tags.length
     ?`<div class="card-tags">${i.tags.map(t=>{const c=getTagColor(t);return`<span class="tag" style="background:${c.bg};color:${c.text}">#${esc(t)}</span>`}).join('')}</div>`
     :'';
-  const link=i.link
-    ?`<a class="card-link" href="${escAttr(i.link)}" target="_blank" rel="noopener">${esc(i.link.length>30?i.link.slice(0,30)+'...':i.link)}</a>`
-    :'';
   const cardStyle=getCardStyle(i);
   const pinCls=i.isPinned?'pin-heart pinned':'pin-heart';
   const selectHTML=selectMode
@@ -928,7 +957,7 @@ function cardHTML(i){
       </button>
       <div class="card-meta"><span class="card-time">${fmtTime(i.createdAt)}</span></div>
       <div class="card-content">${esc(i.content)}</div>
-      ${tagHTML}${link}
+      ${tagHTML}
     </div>`;
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -939,7 +968,6 @@ function openAddModal(){
   editingId=null;
   document.getElementById('modal-add-title').textContent='灵感一刻';
   document.getElementById('input-content').value='';
-  document.getElementById('input-link').value='';
   document.getElementById('edit-extra-actions').style.display='none';
   renderTagChips([]);
   document.getElementById('modal-add').style.display='flex';
@@ -951,7 +979,6 @@ function openEditModal(id){
   editingId=id;
   document.getElementById('modal-add-title').textContent='编辑灵感';
   document.getElementById('input-content').value=i.content;
-  document.getElementById('input-link').value=i.link||'';
   renderTagChips(i.tags||[]);
   document.getElementById('edit-extra-actions').style.display='flex';
   document.getElementById('modal-add').style.display='flex';
@@ -990,10 +1017,9 @@ function autoSave(){
   autoSaveTimer=setTimeout(()=>{
     const content=document.getElementById('input-content').value.trim();
     if(!content)return;
-    const link=document.getElementById('input-link').value.trim();
     if(!editingId){
       const id=uid();
-      DATA.inspirations.push({id,content,link:link||null,tags:[...selectedTags],isPinned:false,createdAt:Date.now(),updatedAt:Date.now()});
+      DATA.inspirations.push({id,content,tags:[...selectedTags],isPinned:false,createdAt:Date.now(),updatedAt:Date.now()});
       editingId=id;
       document.getElementById('modal-add-title').textContent='编辑灵感';
       document.getElementById('edit-extra-actions').style.display='flex';
@@ -1001,7 +1027,6 @@ function autoSave(){
       const idx=DATA.inspirations.findIndex(x=>x.id===editingId);
       if(idx>=0){
         DATA.inspirations[idx].content=content;
-        DATA.inspirations[idx].link=link;
         DATA.inspirations[idx].tags=[...selectedTags];
         DATA.inspirations[idx].updatedAt=Date.now();
       }
@@ -1014,17 +1039,15 @@ function saveInspiration(){
   clearTimeout(autoSaveTimer);
   const content=document.getElementById('input-content').value.trim();
   if(!content){toast('请输入灵感内容');return;}
-  const link=document.getElementById('input-link').value.trim();
   if(editingId){
     const idx=DATA.inspirations.findIndex(x=>x.id===editingId);
     if(idx>=0){
       DATA.inspirations[idx].content=content;
-      DATA.inspirations[idx].link=link;
       DATA.inspirations[idx].tags=[...selectedTags];
       DATA.inspirations[idx].updatedAt=Date.now();
     }
   }else{
-    DATA.inspirations.push({id:uid(),content,link:link||null,tags:[...selectedTags],isPinned:false,createdAt:Date.now(),updatedAt:Date.now()});
+    DATA.inspirations.push({id:uid(),content,tags:[...selectedTags],isPinned:false,createdAt:Date.now(),updatedAt:Date.now()});
   }
   saveData(DATA);
   closeAddModal();
@@ -1089,10 +1112,12 @@ function toggleSelectMode(){
   document.getElementById('btn-batch').textContent=selectMode?'取消':'批量管理';
   if(!selectMode){
     document.getElementById('batch-bar').style.display='none';
+    document.getElementById('input-bar').style.display='';
     document.getElementById('btn-filter').style.display='';
     document.getElementById('btn-sort').style.display='';
     document.getElementById('btn-export').style.display='';
   }else{
+    document.getElementById('input-bar').style.display='none';
     document.getElementById('btn-filter').style.display='none';
     document.getElementById('btn-sort').style.display='none';
     document.getElementById('btn-export').style.display='none';
@@ -1136,6 +1161,7 @@ function batchDelete(){
   document.getElementById('btn-batch').classList.remove('active');
   document.getElementById('btn-batch').textContent='批量管理';
   document.getElementById('batch-bar').style.display='none';
+  document.getElementById('input-bar').style.display='';
   document.getElementById('btn-filter').style.display='';
   document.getElementById('btn-sort').style.display='';
   document.getElementById('btn-export').style.display='';
@@ -1179,7 +1205,6 @@ function renderDetail(id){
     :'<span style="color:var(--text-muted);font-size:13px">无</span>';
   container.innerHTML=`
     <div class="detail-field"><div class="detail-field-label">灵感内容</div><div class="detail-field-value">${esc(i.content)}</div></div>
-    ${i.link?`<div class="detail-field"><div class="detail-field-label">溯源链接</div><a class="detail-link" href="${escAttr(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}
     <div class="detail-field"><div class="detail-field-label">标签</div><div style="display:flex;gap:6px;flex-wrap:wrap">${tags}</div></div>
     <div class="detail-field"><div class="detail-field-label">创建时间</div><div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.createdAt)}</div></div>
     ${i.updatedAt!==i.createdAt?`<div class="detail-field"><div class="detail-field-label">最后更新</div><div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.updatedAt)}</div></div>`:''}
@@ -1243,9 +1268,9 @@ function renderMgmt(){
 function exportExcel(){
   const items=getFiltered();
   if(items.length===0){toast('没有可导出的数据');return}
-  const data=items.map(i=>({'文字内容':i.content,'网页链接':i.link||'','创建时间':fmtTime(i.createdAt),'标签':(i.tags||[]).join(', '),'置顶状态':i.isPinned?'是':'否'}));
+  const data=items.map(i=>({'文字内容':i.content,'创建时间':fmtTime(i.createdAt),'标签':(i.tags||[]).join(', '),'置顶状态':i.isPinned?'是':'否'}));
   const ws=XLSX.utils.json_to_sheet(data);
-  ws['!cols']=[{wch:40},{wch:30},{wch:18},{wch:20},{wch:10}];
+  ws['!cols']=[{wch:40},{wch:18},{wch:20},{wch:10}];
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'灵感数据');
   XLSX.writeFile(wb,`灵感数据_${new Date().toISOString().slice(0,10)}.xlsx`);
@@ -1259,9 +1284,8 @@ function init(){
   document.getElementById('btn-mgmt').addEventListener('click',showMgmt);
   document.getElementById('btn-mgmt-back').addEventListener('click',showHome);
   document.getElementById('btn-detail-back').addEventListener('click',showHome);
-  document.getElementById('fab-add').addEventListener('click',openAddModal);
+  document.getElementById('input-bar').addEventListener('click',openAddModal);
   document.getElementById('input-content').addEventListener('input',autoSave);
-  document.getElementById('input-link').addEventListener('input',autoSave);
   document.getElementById('btn-close-add').addEventListener('click',closeAddModal);
   document.getElementById('btn-save').addEventListener('click',saveInspiration);
   document.getElementById('btn-new-tag').addEventListener('click',()=>{document.getElementById('tag-add-row').style.display='flex';document.getElementById('input-new-tag').focus();});
