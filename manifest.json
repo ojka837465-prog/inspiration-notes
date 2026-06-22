@@ -1,12 +1,12 @@
 {
-  "name": "灵感速记",
-  "short_name": "灵感速记",
-  "description": "网文作者灵感记录工具",
+  "name": "Inspiration",
+  "short_name": "Inspiration",
+  "description": "灵感记录工具",
   "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f0ece6",
-  "theme_color": "#e8e4de",
+  "theme_color": "#7c6ba0",
   "icons": [
     {
       "src": "icon.svg",

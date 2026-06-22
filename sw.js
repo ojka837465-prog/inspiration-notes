@@ -1,4 +1,4 @@
-const CACHE = 'inspiration-v2';
+const CACHE = 'inspiration-v3';
 const ASSETS = [
   './',
   './index.html',
