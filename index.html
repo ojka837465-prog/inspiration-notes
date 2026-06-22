@@ -156,43 +156,22 @@ input,textarea,select{user-select:text}
 .section-title .dot.pin{background:var(--accent);box-shadow:0 0 6px var(--accent-glow)}
 .section-title .dot.normal{background:var(--text-muted)}
 
-/* ===== Swipe Wrapper ===== */
-.swipe-wrapper{
-  position:relative;overflow:hidden;
-  border-radius:var(--radius);
-  margin-bottom:12px;
-}
-.swipe-delete-bg{
-  position:absolute;left:0;top:0;bottom:0;width:72px;
-  background:linear-gradient(135deg,#e05555,#d44);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;border-radius:var(--radius) 0 0 var(--radius);
-  z-index:0;
-}
-.swipe-delete-bg svg{width:22px;height:22px;stroke:#fff}
-
 /* ===== Cards ===== */
 .card{
   background:var(--glass-bg-card);
   backdrop-filter:var(--blur);
   -webkit-backdrop-filter:var(--blur);
+  border-radius:var(--radius);
   padding:16px 18px;
+  margin-bottom:12px;
   box-shadow:0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.5);
   position:relative;z-index:1;
   border:1px solid var(--glass-border);
   transition:transform .25s cubic-bezier(.25,.8,.25,1);
   cursor:pointer;
-  touch-action:pan-y;
   -webkit-touch-callout:none;
-  border-radius:var(--radius);
 }
 .card:active{transform:scale(.985)}
-.card.swiped{transform:translateX(72px);border-radius:0 var(--radius) var(--radius) 0}
-.card.swiped::after{
-  content:'';position:absolute;left:-72px;top:0;bottom:0;width:72px;
-  background:var(--glass-bg-card);z-index:3;
-  border-radius:var(--radius) 0 0 var(--radius);
-}
 .card.pinned{
   background:var(--pinned-bg);
   border-color:rgba(200,152,40,0.35);
@@ -934,11 +913,6 @@ function renderList(){
     card.addEventListener('click',function(e){
       if(e.target.closest('.pin-heart'))return;
       if(e.target.closest('.card-select'))return;
-      if(e.target.closest('.swipe-delete-bg'))return;
-      if(card.classList.contains('swiped')){
-        card.classList.remove('swiped');
-        return;
-      }
       if(selectMode){
         toggleCardSelect(card.dataset.id);
         return;
@@ -960,43 +934,6 @@ function renderList(){
       toggleCardSelect(this.dataset.id);
     });
   });
-  // 左滑删除
-  container.querySelectorAll('.swipe-wrapper').forEach(wrapper=>{
-    if(selectMode)return;
-    const card=wrapper.querySelector('.card');
-    if(!card)return;
-    let sx=0,startX=0,stracking=false;
-    wrapper.addEventListener('touchstart',function(e){
-      startX=e.touches[0].clientX;sx=0;stracking=true;
-      if(card.classList.contains('swiped')){
-        card.classList.remove('swiped');startX+=72;
-      }
-    },{passive:true});
-    wrapper.addEventListener('touchmove',function(e){
-      if(!stracking)return;
-      const dx=e.touches[0].clientX-startX;
-      if(dx>5){stracking=false;card.classList.remove('swiped');return;}
-      sx=Math.max(dx,-72);
-      card.style.transition='none';
-      card.style.transform=`translateX(${Math.abs(sx)}px)`;
-    },{passive:true});
-    wrapper.addEventListener('touchend',function(){
-      if(!stracking)return;stracking=false;
-      card.style.transition='';
-      card.style.transform='';
-      if(sx<-40){card.classList.add('swiped');}
-      else{card.classList.remove('swiped');}
-    });
-    // 删除按钮点击
-    const delBg=wrapper.querySelector('.swipe-delete-bg');
-    if(delBg){
-      delBg.addEventListener('click',function(e){
-        e.stopPropagation();
-        confirmDelete(card.dataset.id);
-        card.classList.remove('swiped');
-      });
-    }
-  });
   // 更新批量栏
   updateBatchBar();
 }
@@ -1011,11 +948,7 @@ function cardHTML(i){
     ?`<div class="card-select${selectedIds.has(i.id)?' checked':''}" data-id="${i.id}" data-action="select"></div>`
     :'';
   return`
-    <div class="swipe-wrapper">
-      <div class="swipe-delete-bg" data-action="swipe-delete">
-        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-      </div>
-      <div class="card${i.isPinned?' pinned':''}${selectMode?' selectable':''}" data-id="${i.id}" style="${cardStyle}">
+    <div class="card${i.isPinned?' pinned':''}${selectMode?' selectable':''}" data-id="${i.id}" style="${cardStyle}">
       ${selectHTML}
       <button class="${pinCls}" data-action="pin" aria-label="${i.isPinned?'取消置顶':'置顶'}">
         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -1023,7 +956,6 @@ function cardHTML(i){
       <div class="card-meta"><span class="card-time">${fmtTime(i.createdAt)}</span></div>
       <div class="card-content">${esc(i.content)}</div>
       ${tagHTML}
-      </div>
     </div>`;
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
