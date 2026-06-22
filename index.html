@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="灵感速记">
+<meta name="theme-color" content="#e8e4de">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>灵感速记</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --glass-bg:rgba(255,255,255,0.52);
+  --glass-bg-light:rgba(255,255,255,0.45);
+  --glass-bg-card:rgba(255,255,255,0.48);
+  --glass-bg-input:rgba(255,255,255,0.38);
+  --glass-border:rgba(0,0,0,0.07);
+  --glass-border-strong:rgba(0,0,0,0.10);
+  --blur:blur(24px) saturate(170%);
+  --blur-light:blur(18px) saturate(150%);
+
+  --primary:#7b6a90;
+  --primary-dark:#6a5a80;
+  --primary-glow:rgba(123,106,144,0.2);
+  --accent:#c89828;
+  --accent-light:rgba(200,152,40,0.18);
+  --accent-glow:rgba(200,152,40,0.2);
+  --pinned-bg:rgba(200,152,40,0.12);
+  --pinned-border:#c89828;
+
+  --text:#2d2838;
+  --text-secondary:rgba(0,0,0,0.52);
+  --text-muted:rgba(0,0,0,0.32);
+  --danger:#e05555;
+  --danger-bg:rgba(224,85,85,0.12);
+
+  --radius:20px;
+  --radius-lg:24px;
+  --radius-sm:14px;
+  --radius-btn:24px;
+  --safe-bottom:env(safe-area-inset-bottom,16px);
+}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:#f0ece6 url(bg.jpg) center/cover no-repeat fixed;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background:rgba(255,255,255,0.32);
+  pointer-events:none;
+}
+input,textarea,select{user-select:text}
+
+/* ===== App Shell ===== */
+.app{max-width:500px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
+
+/* ===== Header ===== */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  border-bottom:1px solid var(--glass-border);
+  padding:14px 18px;
+}
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.header-title{
+  font-size:20px;font-weight:700;
+  background:linear-gradient(135deg,#6a5a80,#b89840);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:-.3px;
+}
+.header-menu{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--glass-border);
+  background:rgba(0,0,0,0.04);
+  font-size:18px;cursor:pointer;
+  color:var(--text-secondary);
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.header-menu:active{background:rgba(0,0,0,0.08)}
+
+/* ===== Toolbar ===== */
+.toolbar{
+  display:flex;gap:8px;padding:12px 18px;
+  background:var(--glass-bg-light);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  border-bottom:1px solid var(--glass-border);
+  position:sticky;top:62px;z-index:99;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.toolbar::-webkit-scrollbar{display:none}
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:9px 16px;border-radius:var(--radius-btn);
+  font-size:13px;font-weight:500;border:none;
+  cursor:pointer;white-space:nowrap;
+  transition:all .2s;
+  -webkit-appearance:none;
+}
+.btn:active{transform:scale(.96)}
+.btn-primary{
+  background:var(--primary);color:#fff;
+  box-shadow:0 2px 12px var(--primary-glow);
+}
+.btn-primary:active{background:var(--primary-dark)}
+.btn-outline{
+  background:rgba(0,0,0,0.03);
+  color:var(--text-secondary);
+  border:1px solid var(--glass-border);
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.btn-outline:active{background:rgba(0,0,0,0.07)}
+.btn-outline.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-sm{padding:7px 14px;font-size:12px}
+.sort-dir{font-size:16px;line-height:1;transition:transform .2s}
+.sort-dir.asc{transform:scaleY(-1)}
+
+/* ===== Content Area ===== */
+.content{flex:1;padding:16px 18px;padding-bottom:84px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.section-title{
+  font-size:12px;font-weight:600;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1px;
+  padding:0 6px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-title .dot{width:5px;height:5px;border-radius:50%}
+.section-title .dot.pin{background:var(--accent);box-shadow:0 0 6px var(--accent-glow)}
+.section-title .dot.normal{background:var(--text-muted)}
+
+/* ===== Cards ===== */
+.card{
+  background:var(--glass-bg-card);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  border-radius:var(--radius);
+  padding:16px 18px;
+  margin-bottom:12px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.5);
+  position:relative;z-index:1;
+  border:1px solid var(--glass-border);
+  transition:all .25s cubic-bezier(.25,.8,.25,1);
+  cursor:pointer;
+  touch-action:pan-y;
+  -webkit-touch-callout:none;
+}
+.card:active{transform:scale(.985);box-shadow:0 1px 6px rgba(0,0,0,0.1)}
+.card.pinned{
+  background:var(--pinned-bg);
+  border-color:rgba(212,160,32,0.35);
+  box-shadow:0 2px 12px rgba(200,152,40,0.12),inset 0 1px 0 rgba(255,255,255,0.6);
+  border-left:4px solid var(--pinned-border);
+}
+.pin-heart{
+  position:absolute;top:10px;right:12px;z-index:5;
+  width:28px;height:28px;border:none;background:none;
+  cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.pin-heart svg{
+  width:22px;height:22px;
+  fill:none;stroke:var(--text-muted);stroke-width:1.8;
+  transition:all .25s ease;
+}
+.pin-heart.pinned svg{
+  fill:var(--accent);stroke:var(--accent);
+}
+.pin-heart:active svg{transform:scale(1.2)}
+.card-meta{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:10px;flex-wrap:wrap;
+}
+.card-time{
+  font-size:11px;color:var(--text-muted);
+}
+.card-content{
+  font-size:14px;line-height:1.7;color:var(--text);
+  word-break:break-word;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.card-link{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-top:10px;font-size:12px;color:var(--primary);
+  text-decoration:none;word-break:break-all;
+  pointer-events:auto;
+}
+.card-link:active{opacity:.6}
+.card-tags{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;
+}
+.tag{
+  font-size:11px;padding:3px 10px;border-radius:10px;
+  font-weight:500;line-height:1.4;
+}
+
+/* ===== Empty State ===== */
+.empty{
+  text-align:center;padding:60px 20px;color:var(--text-muted);
+}
+.empty-icon{font-size:48px;margin-bottom:14px;opacity:0.5}
+.empty-title{font-size:17px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+.empty-desc{font-size:13px;color:var(--text-muted)}
+
+/* ===== FAB ===== */
+.fab{
+  position:fixed;bottom:calc(28px + var(--safe-bottom));right:18px;
+  width:58px;height:58px;border-radius:50%;
+  background:var(--primary);color:#fff;
+  border:none;font-size:30px;cursor:pointer;
+  box-shadow:0 4px 20px var(--primary-glow),0 2px 8px rgba(0,0,0,0.3);
+  display:flex;align-items:center;justify-content:center;
+  z-index:150;transition:all .2s;
+  -webkit-tap-highlight-color:transparent;
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+}
+.fab:active{transform:scale(.9);box-shadow:0 2px 12px var(--primary-glow)}
+
+/* ===== Modal ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.18);
+  z-index:200;display:flex;align-items:flex-end;
+  animation:fadeIn .25s;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.modal{
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  width:100%;max-width:500px;margin:0 auto;
+  border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+  max-height:88vh;display:flex;flex-direction:column;
+  animation:slideUp .3s ease-out;
+  box-shadow:0 -4px 24px rgba(0,0,0,0.12);
+  border:1px solid var(--glass-border-strong);
+  border-bottom:none;
+}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px 14px;border-bottom:1px solid var(--glass-border);
+}
+.modal-title{font-size:17px;font-weight:600;color:var(--text)}
+.modal-close{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--glass-border);
+  background:rgba(0,0,0,0.03);
+  font-size:16px;cursor:pointer;color:var(--text-secondary);
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.modal-close:active{background:rgba(0,0,0,0.08)}
+.modal-body{
+  padding:22px;overflow-y:auto;flex:1;
+  -webkit-overflow-scrolling:touch;
+}
+.modal-footer{
+  padding:14px 22px calc(14px + var(--safe-bottom));
+  border-top:1px solid var(--glass-border);
+}
+
+/* ===== Form Elements ===== */
+.form-group{margin-bottom:18px}
+.form-label{
+  font-size:13px;font-weight:600;color:var(--text-secondary);
+  margin-bottom:8px;display:block;
+}
+.form-input,.form-textarea,.form-select{
+  width:100%;padding:12px 16px;
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);font-size:14px;
+  color:var(--text);
+  background:var(--glass-bg-input);
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+  transition:border-color .2s,box-shadow .2s;
+  font-family:inherit;-webkit-appearance:none;
+}
+.form-input:focus,.form-textarea:focus,.form-select:focus{
+  outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-glow);
+}
+.form-textarea{
+  min-height:110px;resize:vertical;line-height:1.7;
+}
+.form-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-size:12px;padding:5px 14px;border-radius:16px;
+  border:1px solid var(--glass-border);
+  background:rgba(0,0,0,0.03);
+  color:var(--text-secondary);cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;gap:4px;
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.chip.selected{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip.sel{transform:scale(1.05)}
+.chip:active{transform:scale(.96)}
+.chip-add{
+  font-size:12px;padding:5px 14px;border-radius:16px;
+  border:1px dashed var(--glass-border-strong);background:none;
+  color:var(--primary);cursor:pointer;
+}
+.chip-add:active{background:var(--primary-glow)}
+.inline-add{
+  display:flex;gap:8px;margin-top:8px;
+}
+.inline-add input{
+  flex:1;padding:10px 14px;border:1px solid var(--glass-border);
+  border-radius:var(--radius-sm);font-size:13px;
+  background:var(--glass-bg-input);color:var(--text);
+}
+.inline-add input:focus{outline:none;border-color:var(--primary)}
+
+/* ===== Detail View ===== */
+.detail-header{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--glass-border);
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  position:sticky;top:0;z-index:100;
+}
+.detail-back{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--glass-border);
+  background:rgba(0,0,0,0.03);
+  font-size:20px;cursor:pointer;color:var(--text);
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.detail-back:active{background:rgba(0,0,0,0.08)}
+.detail-title{font-size:17px;font-weight:600;flex:1}
+.detail-actions{display:flex;gap:4px}
+.detail-actions button{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--glass-border);
+  background:rgba(0,0,0,0.03);
+  font-size:16px;cursor:pointer;color:var(--text-secondary);
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.detail-actions button:active{background:rgba(0,0,0,0.08)}
+.detail-body{padding:16px;flex:1;overflow-y:auto}
+.detail-field{margin-bottom:24px}
+.detail-field-label{
+  font-size:11px;font-weight:600;color:var(--text-muted);
+  margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px;
+}
+.detail-field-value{font-size:15px;line-height:1.8;color:var(--text);word-break:break-word}
+.detail-link{
+  display:inline-flex;align-items:center;gap:4px;
+  color:var(--primary);text-decoration:none;font-size:14px;
+  word-break:break-all;
+}
+.detail-link:active{opacity:.6}
+
+/* ===== Management Page ===== */
+.mgmt-body{padding:18px}
+.mgmt-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid var(--glass-border);
+}
+.mgmt-item-name{font-size:14px;color:var(--text)}
+.mgmt-item-delete{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(248,113,113,0.3);
+  background:var(--danger-bg);color:var(--danger);
+  font-size:14px;cursor:pointer;
+  backdrop-filter:var(--blur-light);
+  -webkit-backdrop-filter:var(--blur-light);
+}
+.mgmt-item-delete:active{background:rgba(248,113,113,0.25)}
+.mgmt-add-row{display:flex;gap:8px;margin-top:18px;padding-top:18px;border-top:1px solid var(--glass-border)}
+.mgmt-add-row input{flex:1}
+.mgmt-usage{font-size:11px;color:var(--text-muted);margin-left:6px}
+
+/* ===== Delete Confirm ===== */
+.modal-actions{display:flex;gap:12px}
+.modal-actions .btn{flex:1;justify-content:center}
+.btn-danger{background:var(--danger);color:#fff;box-shadow:0 2px 12px rgba(248,113,113,0.3)}
+.btn-danger:active{background:#ef4444}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;bottom:120px;left:50%;transform:translateX(-50%);
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  color:var(--text);padding:10px 22px;
+  border-radius:var(--radius-btn);font-size:13px;z-index:300;
+  animation:toastIn .25s ease-out;
+  pointer-events:none;
+  border:1px solid var(--glass-border-strong);
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+}
+.toast.out{animation:toastOut .2s ease-in forwards}
+
+/* ===== Filter Panel ===== */
+.filter-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+}
+.filter-label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.filter-reset{font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer}
+
+/* ===== Animations ===== */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+
+@media(min-width:500px){
+  .app{border-left:1px solid var(--glass-border);border-right:1px solid var(--glass-border)}
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+<!-- ====== HOME VIEW ====== -->
+<div id="home-view" style="display:flex;flex-direction:column;flex:1;min-height:100vh">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <div class="header-title">灵感速记</div>
+      <button class="header-menu" id="btn-mgmt" title="标签管理">标签</button>
+    </div>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="toolbar" id="toolbar">
+    <button class="btn btn-outline btn-sm" id="btn-filter">筛选</button>
+    <button class="btn btn-outline btn-sm" id="btn-sort">
+      <span class="sort-dir desc" id="sort-icon">↓</span> 时间
+    </button>
+    <button class="btn btn-outline btn-sm" id="btn-export">导出</button>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="list-content">
+    <div id="list-render"></div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fab-add" title="快速记录灵感">+</button>
+</div>
+
+<!-- ====== MANAGEMENT VIEW ====== -->
+<div id="mgmt-view" style="display:none;flex-direction:column;min-height:100vh">
+  <div class="detail-header">
+    <button class="detail-back" id="btn-mgmt-back">←</button>
+    <div class="detail-title">标签管理</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="mgmt-body" id="mgmt-content"></div>
+</div>
+
+<!-- ====== DETAIL VIEW ====== -->
+<div id="detail-view" style="display:none;flex-direction:column;min-height:100vh">
+  <div class="detail-header">
+    <button class="detail-back" id="btn-detail-back">←</button>
+    <div class="detail-title">灵感详情</div>
+    <div class="detail-actions">
+      <button id="btn-edit-mode" title="编辑">编辑</button>
+      <button id="btn-detail-delete" title="删除" style="color:var(--danger)">删除</button>
+    </div>
+  </div>
+  <div class="modal-body" id="detail-content"></div>
+</div>
+
+</div><!-- /app -->
+
+<!-- ====== MODALS (portaled outside app for proper stacking) ====== -->
+
+<!-- Quick Add / Edit Modal -->
+<div class="modal-overlay" id="modal-add" style="display:none">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title" id="modal-add-title">快速记录灵感</div>
+    <button class="modal-close" id="btn-close-add">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label class="form-label">灵感内容</label>
+      <textarea class="form-textarea" id="input-content" placeholder="写下你的灵感...人物设定、故事开头、剧情设定或网络热点"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">标签</label>
+      <div class="chip-row" id="tag-chips"></div>
+      <div class="inline-add" id="tag-add-row" style="display:none">
+        <input type="text" id="input-new-tag" placeholder="输入新标签名">
+        <button class="btn btn-primary btn-sm" id="btn-confirm-tag">添加</button>
+      </div>
+      <button class="chip-add" id="btn-new-tag" style="margin-top:6px">+ 新标签</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">溯源链接</label>
+      <input class="form-input" id="input-link" type="url" placeholder="粘贴网页链接（选填）">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" id="btn-save" style="width:100%;justify-content:center;padding:12px">保存灵感</button>
+    <div id="edit-extra-actions" style="display:none;margin-top:8px;display:none;justify-content:center">
+      <button class="btn btn-outline btn-sm" id="btn-go-detail" style="margin-right:8px">查看详情</button>
+      <button class="btn btn-outline btn-sm" id="btn-delete-from-edit" style="color:var(--danger);border-color:rgba(224,85,85,0.25)">删除</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal-overlay" id="modal-filter" style="display:none">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title">筛选灵感</div>
+    <button class="modal-close" id="btn-close-filter">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="filter-row">
+        <span class="filter-label">按标签</span>
+        <button class="filter-reset" id="btn-reset-tag">清除</button>
+      </div>
+      <div class="chip-row" id="filter-tags"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" id="btn-apply-filter" style="width:100%;justify-content:center;padding:12px">应用筛选</button>
+  </div>
+</div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="modal-confirm" style="display:none">
+<div class="modal" style="max-height:auto">
+  <div class="modal-header">
+    <div class="modal-title">确认删除</div>
+  </div>
+  <div class="modal-body" style="text-align:center;padding:24px">
+    <p style="font-size:15px;margin-bottom:8px">确定要删除这条灵感吗？</p>
+    <p style="font-size:13px;color:var(--text-secondary)">删除后无法恢复</p>
+  </div>
+  <div class="modal-footer modal-actions">
+    <button class="btn btn-outline" id="btn-cancel-delete">取消</button>
+    <button class="btn btn-danger" id="btn-confirm-delete">确认删除</button>
+  </div>
+</div>
+</div>
+
+<!-- Toast container -->
+<div class="toast" id="toast" style="display:none"></div>
+
+<!-- SheetJS CDN -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js">
+</script>
+<!-- CloudBase SDK -->
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js">
+</script>
+
+<script>
+// ==================== CLOUDBASE CONFIG ====================
+const CLOUDBASE_ENV = 'yxy-d5g29np8la45b46b6';
+
+// ==================== DATA STORE ====================
+const STORAGE_KEY = 'inspiration_app_data';
+const SETTINGS_KEY = 'inspiration_app_settings';
+
+let DATA = {inspirations:[],tags:[],tagColors:{}};
+let SETTINGS = {sortOrder:'desc'};
+let CLOUD_READY = false;
+let cloudDB = null;
+
+function loadLocal(){
+  let d;
+  try{d=JSON.parse(localStorage.getItem(STORAGE_KEY))}catch(e){}
+  if(!d||!d.inspirations)d={inspirations:[],tags:[],tagColors:{}};
+  if(!d.tagColors)d.tagColors={};
+  if(!d.tags)d.tags=[];
+  return d;
+}
+function saveLocal(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d))}
+function loadLocalSettings(){
+  try{return JSON.parse(localStorage.getItem(SETTINGS_KEY))||{sortOrder:'desc'}}
+  catch(e){return{sortOrder:'desc'}}
+}
+function saveLocalSettings(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
+
+function saveData(d){
+  DATA = d;
+  saveLocal(d);
+  if(CLOUD_READY)saveCloudDebounced();
+}
+
+// Debounced cloud save for auto-save
+let saveCloudTimer=null;
+function saveCloudDebounced(){
+  clearTimeout(saveCloudTimer);
+  saveCloudTimer=setTimeout(async()=>{
+    await doCloudSave();
+  },1500);
+}
+
+// Immediate cloud save for manual operations
+async function saveCloudNow(){
+  clearTimeout(saveCloudTimer);
+  await doCloudSave();
+}
+
+function mergeData(localData, cloudData){
+  // Merge inspiration arrays: keep newest version of each id
+  const map={};
+  (localData.inspirations||[]).forEach(i=>{map[i.id]=i});
+  (cloudData.inspirations||[]).forEach(i=>{
+    if(!map[i.id]||(i.updatedAt||0)>(map[i.id].updatedAt||0))map[i.id]=i;
+  });
+  const merged=Object.values(map);
+  merged.sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));
+  // Merge tags (union) and tagColors (keep most recent)
+  const tags=[...new Set([...(cloudData.tags||[]),...(localData.tags||[])])];
+  const tagColors={...(cloudData.tagColors||{}),...(localData.tagColors||{})};
+  return {inspirations:merged,tags,tagColors};
+}
+
+async function doCloudSave(){
+  if(!CLOUD_READY)return;
+  try{
+    // Load latest cloud data first to merge
+    const res=await cloudDB.collection('user_data').doc('my_inspirations').get();
+    if(res.data&&res.data.length>0&&res.data[0].payload){
+      DATA=mergeData(DATA,res.data[0].payload);
+      saveLocal(DATA);
+    }
+    // Save merged result
+    await cloudDB.collection('user_data').doc('my_inspirations').set({payload:DATA,updatedAt:Date.now()});
+    console.log('[Sync] Cloud save OK, inspirations:',DATA.inspirations.length);
+  }catch(e){
+    console.error('[Sync] Cloud save FAILED:', e.message);
+  }
+}
+
+async function loadCloud(){
+  try{
+    console.log('[Sync] Loading cloud data...');
+    const res=await cloudDB.collection('user_data').doc('my_inspirations').get();
+    console.log('[Sync] Cloud response:', JSON.stringify(res).substring(0,200));
+    if(res.data&&res.data.length>0&&res.data[0].payload){
+      DATA=mergeData(DATA,res.data[0].payload);
+      if(!DATA.tagColors)DATA.tagColors={};
+      if(!DATA.tags)DATA.tags=[];
+      saveLocal(DATA);
+      console.log('[Sync] Cloud data loaded, inspirations:', DATA.inspirations.length);
+      return true;
+    }
+    console.log('[Sync] No cloud data found (empty or new)');
+  }catch(e){
+    console.error('[Sync] Cloud load FAILED:', e.message);
+  }
+  return false;
+}
+
+async function initCloudBase(){
+  console.log('[Sync] Starting CloudBase init, env:', CLOUDBASE_ENV);
+  try{
+    if(typeof cloudbase==='undefined'){
+      console.log('[Sync] CloudBase SDK not loaded');
+      return;
+    }
+    console.log('[Sync] SDK loaded, initializing...');
+    const app=cloudbase.init({env:CLOUDBASE_ENV});
+    console.log('[Sync] Signing in anonymously...');
+    const loginResult=await app.auth.signInAnonymously();
+    console.log('[Sync] Login result:', loginResult?'success':'failed');
+    cloudDB=app.database();
+    console.log('[Sync] Loading cloud data...');
+    const loaded=await loadCloud();
+    if(!loaded){
+      const local=loadLocal();
+      if(local.inspirations&&local.inspirations.length>0){
+        DATA=local;
+        await cloudDB.collection('user_data').doc('my_inspirations').set({payload:DATA,updatedAt:Date.now()});
+        console.log('[Sync] Uploaded local data to cloud');
+      }
+    }
+    CLOUD_READY=true;
+    console.log('[Sync] CloudBase connected successfully');
+  }catch(e){
+    console.error('[Sync] CloudBase init failed:', e.message, e);
+    console.log('[Sync] Falling back to local storage only');
+  }
+}
+
+// ==================== TAG COLORS ====================
+const TAG_COLORS=[
+  {bg:'#e8dcd8',text:'#5c4038',border:'#c4a898'}, // 山岩褐
+  {bg:'#d8e0e8',text:'#384858',border:'#a0b8c8'}, // 湖水蓝
+  {bg:'#dce8d8',text:'#3d5038',border:'#a0c0a0'}, // 草甸绿
+  {bg:'#ece0d0',text:'#5c4830',border:'#d4b888'}, // 暖光金
+  {bg:'#e4d8e0',text:'#503848',border:'#c0a8b8'}, // 霞光粉
+  {bg:'#d8dce4',text:'#404858',border:'#a8b4c4'}, // 雾霭灰
+  {bg:'#e0e4d0',text:'#484838',border:'#b8c098'}, // 嫩芽绿
+  {bg:'#e0d4d0',text:'#543838',border:'#c89888'}, // 暖陶橙
+  {bg:'#d8e4e0',text:'#385048',border:'#98b8b0'}, // 浅湖青
+  {bg:'#e8e0d4',text:'#504838',border:'#c8b898'}, // 沙砾米
+  {bg:'#dce0d8',text:'#404838',border:'#b0b898'}, // 橄榄绿
+  {bg:'#e4dce0',text:'#483848',border:'#b898a8'}, // 淡紫灰
+  {bg:'#d8e0dc',text:'#384840',border:'#98b8a8'}, // 薄荷青
+  {bg:'#e8e0d8',text:'#504030',border:'#d0b890'}, // 琥珀黄
+  {bg:'#dce0e4',text:'#384050',border:'#a0b0c0'}, // 远山蓝
+  {bg:'#e4dcd8',text:'#4c3838',border:'#c8a098'}, // 枫叶棕
+];
+
+// Ensure all existing tags have a color assigned
+function initTagColors(){
+  if(!DATA.tagColors)DATA.tagColors={};
+  let changed=false;
+  DATA.tags.forEach(t=>{
+    if(DATA.tagColors[t]===undefined){
+      DATA.tagColors[t]=getFreeColorIndex();
+      changed=true;
+    }
+  });
+  if(changed)saveData(DATA);
+}
+function getFreeColorIndex(){
+  const used=new Set(Object.values(DATA.tagColors));
+  for(let i=0;i<TAG_COLORS.length;i++){if(!used.has(i))return i}
+  // All colors used — pick least used one
+  const counts={};
+  for(const idx of Object.values(DATA.tagColors)){counts[idx]=(counts[idx]||0)+1}
+  let minIdx=0,minCount=Infinity;
+  for(let i=0;i<TAG_COLORS.length;i++){
+    if((counts[i]||0)<minCount){minCount=counts[i]||0;minIdx=i}
+  }
+  return minIdx;
+}
+function assignTagColor(tag){
+  if(DATA.tagColors[tag]===undefined){
+    DATA.tagColors[tag]=getFreeColorIndex();
+  }
+}
+
+function getTagColor(tag){
+  if(!DATA.tagColors){initTagColors()}
+  assignTagColor(tag);
+  return TAG_COLORS[DATA.tagColors[tag]];
+}
+
+function getCardStyle(inspiration){
+  if(inspiration.isPinned)return'';
+  const tags=inspiration.tags;
+  if(!tags||!tags.length)return'';
+  const c=getTagColor(tags[0]);
+  return `border-left:4px solid ${c.border};`;
+}
+
+// Active filters
+let filterTag = null;
+
+// Edit state
+let editingId = null;
+
+// ==================== UTILS ====================
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+
+function fmtTime(ts){
+  const d=new Date(ts);
+  const pad=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';t.classList.remove('out');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.style.display='none',200)},1800);
+}
+
+// ==================== NAVIGATION ====================
+function showHome(){
+  document.getElementById('home-view').style.display='flex';
+  document.getElementById('mgmt-view').style.display='none';
+  document.getElementById('detail-view').style.display='none';
+  renderList();
+}
+function showMgmt(){
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('mgmt-view').style.display='flex';
+  document.getElementById('detail-view').style.display='none';
+  renderMgmt();
+}
+function showDetail(id){
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('mgmt-view').style.display='none';
+  document.getElementById('detail-view').style.display='flex';
+  renderDetail(id);
+}
+
+// ==================== RENDER LIST ====================
+function getFiltered(){
+  let items=[...DATA.inspirations];
+  if(filterTag){
+    items=items.filter(i=>i.tags&&i.tags.includes(filterTag));
+  }
+  return items;
+}
+
+function renderList(){
+  const container=document.getElementById('list-render');
+  let items=getFiltered();
+  const pinned=items.filter(i=>i.isPinned);
+  const normal=items.filter(i=>!i.isPinned);
+
+  // Sort normal items
+  normal.sort((a,b)=>{
+    if(SETTINGS.sortOrder==='asc')return a.createdAt-b.createdAt;
+    return b.createdAt-a.createdAt;
+  });
+
+  // Pinned items keep their order (most recently pinned first, or by createdAt)
+  pinned.sort((a,b)=>b.createdAt-a.createdAt);
+
+  if(pinned.length===0&&normal.length===0){
+    container.innerHTML=`
+      <div class="empty">
+        <div class="empty-icon">·</div>
+        <div class="empty-title">还没有灵感记录</div>
+        <div class="empty-desc">点击右下角 + 记录灵感</div>
+        <div class="empty-desc" style="margin-top:4px;font-size:12px">点击卡片心形可置顶（最多3条）</div>
+      </div>`;
+    return;
+  }
+
+  let html='';
+
+  // Pinned section
+  if(pinned.length>0){
+    html+=`<div class="section-title"><span class="dot pin"></span> 置顶灵感</div>`;
+    pinned.forEach(i=>html+=cardHTML(i));
+    html+=`<div style="text-align:center;padding:4px 0 0;font-size:11px;color:var(--text-muted)">点击心形置顶（最多3条）| 点击卡片编辑</div>`;
+  }
+
+  // Normal section
+  if(normal.length>0){
+    if(pinned.length>0){
+      html+=`<div style="margin:8px 0 12px;border-top:1px dashed var(--border)"></div>`;
+    }
+    html+=`<div class="section-title"><span class="dot normal"></span> 时间线</div>`;
+    normal.forEach(i=>html+=cardHTML(i));
+  }
+
+  container.innerHTML=html;
+
+  // Bind card click → edit, heart click → toggle pin
+  container.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click',function(e){
+      if(e.target.closest('.pin-heart'))return;
+      if(e.target.closest('.card-link'))return;
+      openEditModal(card.dataset.id);
+    });
+  });
+
+  container.querySelectorAll('.pin-heart').forEach(heart=>{
+    heart.addEventListener('click',function(e){
+      e.stopPropagation();
+      const card=this.closest('.card');
+      if(card)togglePin(card.dataset.id);
+    });
+  });
+}
+
+function cardHTML(i){
+  const tagHTML=i.tags&&i.tags.length
+    ?`<div class="card-tags">${i.tags.map(t=>{const c=getTagColor(t);return`<span class="tag" style="background:${c.bg};color:${c.text}">#${esc(t)}</span>`}).join('')}</div>`
+    :'';
+  const link=i.link
+    ?`<a class="card-link" href="${escAttr(i.link)}" target="_blank" rel="noopener">${esc(i.link.length>30?i.link.slice(0,30)+'...':i.link)}</a>`
+    :'';
+  const cardStyle=getCardStyle(i);
+  const pinCls=i.isPinned?'pin-heart pinned':'pin-heart';
+  return `
+    <div class="card${i.isPinned?' pinned':''}" data-id="${i.id}" style="${cardStyle}">
+      <button class="${pinCls}" data-action="pin" aria-label="${i.isPinned?'取消置顶':'置顶'}">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </button>
+      <div class="card-meta">
+        <span class="card-time">${fmtTime(i.createdAt)}</span>
+      </div>
+      <div class="card-content">${esc(i.content)}</div>
+      ${tagHTML}
+      ${link}
+    </div>`;
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function escAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// ==================== ADD / EDIT MODAL ====================
+function openAddModal(){
+  editingId=null;
+  document.getElementById('modal-add-title').textContent='灵感一刻';
+  document.getElementById('input-content').value='';
+  document.getElementById('input-link').value='';
+  document.getElementById('edit-extra-actions').style.display='none';
+  renderTagChips([]);
+  document.getElementById('modal-add').style.display='flex';
+  document.getElementById('input-content').focus();
+}
+
+function openEditModal(id){
+  const i=DATA.inspirations.find(x=>x.id===id);
+  if(!i)return;
+  editingId=id;
+  document.getElementById('modal-add-title').textContent='编辑灵感';
+  document.getElementById('input-content').value=i.content;
+  document.getElementById('input-link').value=i.link||'';
+  renderTagChips(i.tags||[]);
+  document.getElementById('edit-extra-actions').style.display='flex';
+  document.getElementById('modal-add').style.display='flex';
+}
+
+function closeAddModal(){
+  clearTimeout(autoSaveTimer);
+  document.getElementById('modal-add').style.display='none';
+}
+
+let selectedTags=[];
+function renderTagChips(preselect){
+  selectedTags=[...preselect];
+  const container=document.getElementById('tag-chips');
+  container.innerHTML=DATA.tags.map(t=>{
+    const sel=selectedTags.includes(t);
+    const c=getTagColor(t);
+    let style, cls;
+    if(sel){
+      cls='chip sel';
+      style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
+    }else{
+      cls='chip';
+      style=`background:${c.bg};color:${c.text};border-color:${c.border}`;
+    }
+    return `<span class="${cls}" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
+  }).join('');
+  container.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      const t=this.dataset.tag;
+      if(selectedTags.includes(t)){
+        selectedTags=selectedTags.filter(x=>x!==t);
+      }else{
+        selectedTags.push(t);
+      }
+      renderTagChips(selectedTags);
+      autoSave(); // Trigger auto-save on tag change
+    });
+  });
+}
+
+// ==================== AUTO SAVE ====================
+let autoSaveTimer=null;
+function autoSave(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(()=>{
+    const content=document.getElementById('input-content').value.trim();
+    if(!content)return; // Don't save empty
+    const link=document.getElementById('input-link').value.trim();
+
+    if(!editingId){
+      // New inspiration — create first, then switch to edit mode
+      const id=uid();
+      DATA.inspirations.push({
+        id,content,link:link||null,
+        tags:[...selectedTags],isPinned:false,
+        createdAt:Date.now(),updatedAt:Date.now()
+      });
+      editingId=id;
+      document.getElementById('modal-add-title').textContent='编辑灵感';
+      document.getElementById('edit-extra-actions').style.display='flex';
+    }else{
+      // Edit existing
+      const idx=DATA.inspirations.findIndex(x=>x.id===editingId);
+      if(idx>=0){
+        DATA.inspirations[idx].content=content;
+        DATA.inspirations[idx].link=link;
+        DATA.inspirations[idx].tags=[...selectedTags];
+        DATA.inspirations[idx].updatedAt=Date.now();
+      }
+    }
+    saveData(DATA);
+    if(document.getElementById('home-view').style.display!=='none')renderList();
+  },1500);
+}
+
+function saveInspiration(){
+  clearTimeout(autoSaveTimer);
+  const content=document.getElementById('input-content').value.trim();
+  if(!content){toast('请输入灵感内容');return;}
+
+  const link=document.getElementById('input-link').value.trim();
+
+  if(editingId){
+    const idx=DATA.inspirations.findIndex(x=>x.id===editingId);
+    if(idx>=0){
+      DATA.inspirations[idx].content=content;
+      DATA.inspirations[idx].link=link;
+      DATA.inspirations[idx].tags=[...selectedTags];
+      DATA.inspirations[idx].updatedAt=Date.now();
+    }
+  }else{
+    DATA.inspirations.push({
+      id:uid(),
+      content,
+      link:link||null,
+      tags:[...selectedTags],
+      isPinned:false,
+      createdAt:Date.now(),
+      updatedAt:Date.now()
+    });
+  }
+
+  saveData(DATA);
+  closeAddModal();
+  saveCloudNow(); // Immediate cloud sync
+  toast(editingId?'灵感已更新':'灵感已记录');
+  editingId=null;
+
+  if(document.getElementById('home-view').style.display!=='none')renderList();
+  if(document.getElementById('detail-view').style.display!=='none'){
+    const detailContent=document.getElementById('detail-content');
+    if(detailContent.dataset&&detailContent.dataset.id){
+      renderDetail(detailContent.dataset.id);
+    }
+  }
+}
+
+// Tag inline add
+function addNewTagFromModal(){
+  const input=document.getElementById('input-new-tag');
+  const name=input.value.trim();
+  if(!name)return;
+  if(DATA.tags.includes(name)){toast('标签已存在');return;}
+  DATA.tags.push(name);
+  assignTagColor(name);
+  saveData(DATA);
+  renderTagChips(selectedTags);
+  input.value='';
+  document.getElementById('tag-add-row').style.display='none';
+}
+
+// ==================== FILTER ====================
+function openFilterModal(){
+  const tagContainer=document.getElementById('filter-tags');
+  tagContainer.innerHTML=DATA.tags.map(t=>{
+    const sel=filterTag===t;
+    const style=sel?'':`background:${getTagColor(t).bg};color:${getTagColor(t).text};border-color:${getTagColor(t).border}`;
+    return `<span class="chip${sel?' selected':''}" data-tag="${escAttr(t)}" style="${style}">#${esc(t)}</span>`;
+  }).join('');
+
+  tagContainer.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      const t=this.dataset.tag;
+      if(filterTag===t){filterTag=null;}
+      else{filterTag=t;}
+      closeFilterModal();
+      applyFilter();
+    });
+  });
+
+  document.getElementById('modal-filter').style.display='flex';
+}
+
+function closeFilterModal(){
+  document.getElementById('modal-filter').style.display='none';
+}
+
+function applyFilter(){
+  closeFilterModal();
+  renderList();
+  updateFilterBadge();
+}
+
+function updateFilterBadge(){
+  const btn=document.getElementById('btn-filter');
+  if(filterTag){
+    btn.classList.add('active');
+    btn.textContent='#'+filterTag;
+  }else{
+    btn.classList.remove('active');
+    btn.textContent='筛选';
+  }
+}
+
+// ==================== SORT ====================
+function toggleSort(){
+  SETTINGS.sortOrder=SETTINGS.sortOrder==='desc'?'asc':'desc';
+  saveLocalSettings(SETTINGS);
+  const icon=document.getElementById('sort-icon');
+  icon.className='sort-dir '+SETTINGS.sortOrder;
+  renderList();
+}
+
+// ==================== PIN ====================
+function togglePin(id){
+  const i=DATA.inspirations.find(x=>x.id===id);
+  if(!i)return;
+  if(!i.isPinned){
+    const pinnedCount=DATA.inspirations.filter(x=>x.isPinned).length;
+    if(pinnedCount>=3){toast('最多置顶 3 条灵感');return;}
+  }
+  i.isPinned=!i.isPinned;
+  saveData(DATA);
+  saveCloudNow(); // Immediate cloud sync
+  renderList();
+  toast(i.isPinned?'已置顶':'已取消置顶');
+}
+
+// ==================== DELETE ====================
+let deleteTargetId=null;
+function confirmDelete(id){
+  deleteTargetId=id;
+  document.getElementById('modal-confirm').style.display='flex';
+}
+function doDelete(){
+  if(!deleteTargetId)return;
+  DATA.inspirations=DATA.inspirations.filter(x=>x.id!==deleteTargetId);
+  saveData(DATA);
+  document.getElementById('modal-confirm').style.display='none';
+  deleteTargetId=null;
+  toast('灵感已删除');
+  showHome();
+}
+
+// ==================== DETAIL VIEW ====================
+function renderDetail(id){
+  const i=DATA.inspirations.find(x=>x.id===id);
+  if(!i){showHome();return;}
+  const container=document.getElementById('detail-content');
+  container.dataset.id=id;
+
+  const tags=i.tags&&i.tags.length
+    ?i.tags.map(t=>{const c=getTagColor(t);return`<span class="tag" style="background:${c.bg};color:${c.text}">#${esc(t)}</span>`}).join(' ')
+    :'<span style="color:var(--text-muted);font-size:13px">无</span>';
+
+  container.innerHTML=`
+    <div class="detail-field">
+      <div class="detail-field-label">灵感内容</div>
+      <div class="detail-field-value">${esc(i.content)}</div>
+    </div>
+    ${i.link?`
+    <div class="detail-field">
+      <div class="detail-field-label">溯源链接</div>
+      <a class="detail-link" href="${escAttr(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a>
+    </div>`:''}
+    <div class="detail-field">
+      <div class="detail-field-label">标签</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${tags}</div>
+    </div>
+    <div class="detail-field">
+      <div class="detail-field-label">创建时间</div>
+      <div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.createdAt)}</div>
+    </div>
+    ${i.updatedAt!==i.createdAt?`
+    <div class="detail-field">
+      <div class="detail-field-label">最后更新</div>
+      <div class="detail-field-value" style="font-size:13px;color:var(--text-secondary)">${fmtTime(i.updatedAt)}</div>
+    </div>`:''}
+    <div class="detail-field">
+      <div class="detail-field-label">置顶状态</div>
+      <div class="detail-field-value">${i.isPinned?'已置顶':'未置顶'}</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+      <button class="btn btn-outline" id="btn-detail-pin" style="flex:1;justify-content:center;gap:6px">
+        <svg viewBox="0 0 24 24" width="16" height="16" style="fill:${i.isPinned?'var(--accent)':'none'};stroke:${i.isPinned?'var(--accent)':'var(--text-muted)'};stroke-width:1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        ${i.isPinned?'取消置顶':'置顶'}
+      </button>
+      <button class="btn btn-outline" id="btn-detail-edit" style="flex:1;justify-content:center">编辑</button>
+    </div>
+  `;
+
+  // Bind actions
+  document.getElementById('btn-detail-pin').addEventListener('click',()=>{
+    togglePin(i.id);
+    renderDetail(i.id);
+  });
+  document.getElementById('btn-detail-edit').addEventListener('click',()=>{
+    // Go back to home first, then open edit modal
+    showHome();
+    setTimeout(()=>openEditModal(i.id),150);
+  });
+  document.getElementById('btn-edit-mode').addEventListener('click',()=>{
+    showHome();
+    setTimeout(()=>openEditModal(i.id),150);
+  });
+  document.getElementById('btn-detail-delete').addEventListener('click',()=>{
+    confirmDelete(i.id);
+  });
+}
+
+// ==================== MANAGEMENT ====================
+function renderMgmt(){
+  const container=document.getElementById('mgmt-content');
+  const counts={};
+  DATA.inspirations.forEach(i=>{
+    if(i.tags)i.tags.forEach(t=>{counts[t]=(counts[t]||0)+1});
+  });
+
+  container.innerHTML=`
+    ${DATA.tags.length===0?'<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px">暂无标签，请添加</div>':''}
+    ${DATA.tags.map(t=>{
+      const c=getTagColor(t);
+      return `
+      <div class="mgmt-item">
+        <span class="mgmt-item-name">
+          <span class="tag" style="background:${c.bg};color:${c.text}">#${esc(t)}</span>
+          <span class="mgmt-usage">(${counts[t]||0}条)</span>
+        </span>
+        <button class="mgmt-item-delete" data-tag="${escAttr(t)}">✕</button>
+      </div>`;
+    }).join('')}
+    <div class="mgmt-add-row">
+      <input class="form-input" id="input-new-tag-mgmt" type="text" placeholder="输入标签名称">
+      <button class="btn btn-primary btn-sm" id="btn-add-tag-mgmt">添加</button>
+    </div>
+  `;
+
+  // Bind delete
+  container.querySelectorAll('.mgmt-item-delete').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const tag=this.dataset.tag;
+      DATA.tags=DATA.tags.filter(t=>t!==tag);
+      DATA.inspirations.forEach(i=>{
+        if(i.tags)i.tags=i.tags.filter(t=>t!==tag);
+      });
+      if(filterTag===tag){filterTag=null;updateFilterBadge()}
+      saveData(DATA);
+      renderMgmt();
+      renderList();
+      toast(`标签"${tag}"已删除`);
+    });
+  });
+
+  document.getElementById('btn-add-tag-mgmt').addEventListener('click',()=>{
+    const input=document.getElementById('input-new-tag-mgmt');
+    const name=input.value.trim();
+    if(!name)return;
+    if(DATA.tags.includes(name)){toast('标签已存在');return}
+    DATA.tags.push(name);
+    assignTagColor(name);
+    saveData(DATA);
+    renderMgmt();
+    input.value='';
+    toast('标签已添加');
+  });
+}
+
+// ==================== EXPORT ====================
+function exportExcel(){
+  const items=getFiltered();
+  if(items.length===0){toast('没有可导出的数据');return}
+
+  const data=items.map(i=>({
+    '文字内容':i.content,
+    '网页链接':i.link||'',
+    '创建时间':fmtTime(i.createdAt),
+    '标签':(i.tags||[]).join(', '),
+    '置顶状态':i.isPinned?'是':'否'
+  }));
+
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws['!cols']=[
+    {wch:40},{wch:30},{wch:18},{wch:20},{wch:10}
+  ];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'灵感数据');
+  XLSX.writeFile(wb,`灵感数据_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('导出成功');
+}
+
+// ==================== EVENT BINDINGS ====================
+function init(){
+  // Load local data first for instant display
+  DATA = loadLocal();
+  SETTINGS = loadLocalSettings();
+  
+  // Ensure all existing tags have colors
+  initTagColors();
+
+  // Navigation
+  document.getElementById('btn-mgmt').addEventListener('click',showMgmt);
+  document.getElementById('btn-mgmt-back').addEventListener('click',showHome);
+  document.getElementById('btn-detail-back').addEventListener('click',showHome);
+
+  // FAB
+  document.getElementById('fab-add').addEventListener('click',openAddModal);
+
+  // Auto-save on content & link change
+  document.getElementById('input-content').addEventListener('input',autoSave);
+  document.getElementById('input-link').addEventListener('input',autoSave);
+
+  // Add modal
+  document.getElementById('btn-close-add').addEventListener('click',closeAddModal);
+  document.getElementById('btn-save').addEventListener('click',saveInspiration);
+  document.getElementById('btn-new-tag').addEventListener('click',()=>{
+    document.getElementById('tag-add-row').style.display='flex';
+    document.getElementById('input-new-tag').focus();
+  });
+  document.getElementById('btn-confirm-tag').addEventListener('click',addNewTagFromModal);
+  document.getElementById('input-new-tag').addEventListener('keydown',e=>{
+    if(e.key==='Enter')addNewTagFromModal();
+  });
+  // Edit extra actions
+  document.getElementById('btn-go-detail').addEventListener('click',()=>{
+    if(editingId){closeAddModal();showDetail(editingId)}
+  });
+  document.getElementById('btn-delete-from-edit').addEventListener('click',()=>{
+    if(editingId){closeAddModal();confirmDelete(editingId)}
+  });
+
+  // Close add modal on overlay click
+  document.getElementById('modal-add').addEventListener('click',function(e){
+    if(e.target===this)closeAddModal();
+  });
+
+  // Filter
+  document.getElementById('btn-filter').addEventListener('click',openFilterModal);
+  document.getElementById('btn-close-filter').addEventListener('click',closeFilterModal);
+  document.getElementById('btn-apply-filter').addEventListener('click',applyFilter);
+  document.getElementById('btn-reset-tag').addEventListener('click',()=>{
+    filterTag=null;
+    applyFilter();
+  });
+  document.getElementById('modal-filter').addEventListener('click',function(e){
+    if(e.target===this)closeFilterModal();
+  });
+
+  // Sort
+  document.getElementById('btn-sort').addEventListener('click',toggleSort);
+
+  // Export
+  document.getElementById('btn-export').addEventListener('click',exportExcel);
+
+  // Delete confirm
+  document.getElementById('btn-cancel-delete').addEventListener('click',()=>{
+    document.getElementById('modal-confirm').style.display='none';
+    deleteTargetId=null;
+  });
+  document.getElementById('btn-confirm-delete').addEventListener('click',doDelete);
+  document.getElementById('modal-confirm').addEventListener('click',function(e){
+    if(e.target===this){document.getElementById('modal-confirm').style.display='none';deleteTargetId=null}
+  });
+
+  // Mgmt keyboard: Enter to add tag
+  document.getElementById('mgmt-content').addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      const addTag=document.getElementById('btn-add-tag-mgmt');
+      if(addTag)addTag.click();
+    }
+  });
+
+  // Init sort icon
+  document.getElementById('sort-icon').className='sort-dir '+SETTINGS.sortOrder;
+
+  // Initial render
+  updateFilterBadge();
+  renderList();
+
+  // Async: connect CloudBase for sync
+  initCloudBase().then(()=>{
+    if(CLOUD_READY)renderList(); // Refresh with cloud data if different
+  });
+}
+
+// ==================== PWA REGISTRATION ====================
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+// ==================== BOOT ====================
+document.addEventListener('DOMContentLoaded',init);
+</script>
+
+</body>
+</html>
