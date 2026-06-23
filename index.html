@@ -492,6 +492,84 @@ input,textarea,select{user-select:text}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes toastOut{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+@keyframes cardZoomIn{
+  from{opacity:0;transform:scale(.92) translateY(8px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+/* ===== Full-screen Edit View ===== */
+.edit-view{
+  position:fixed;inset:0;z-index:300;
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  display:flex;flex-direction:column;
+  animation:cardZoomIn .35s cubic-bezier(.22,.61,.36,1);
+}
+.edit-header{
+  display:flex;align-items:center;gap:12px;
+  padding:18px 18px 14px;
+  border-bottom:1px solid var(--glass-border);
+  background:var(--glass-bg);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  flex-shrink:0;
+}
+.edit-back-btn{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--glass-border);
+  background:var(--glass-bg-light);cursor:pointer;
+  font-size:18px;color:var(--text-secondary);
+  flex-shrink:0;
+}
+.edit-back-btn:active{background:rgba(0,0,0,0.06)}
+.edit-title{font-size:16px;font-weight:600;flex:1}
+.edit-save{
+  padding:8px 18px;border-radius:var(--radius-btn);
+  background:var(--primary);color:#fff;border:none;
+  font-size:13px;font-weight:500;cursor:pointer;
+  flex-shrink:0;
+}
+.edit-save:active{background:var(--primary-dark)}
+.edit-body{
+  flex:1;overflow-y:auto;padding:18px;
+  padding-bottom:24px;-webkit-overflow-scrolling:touch;
+}
+.edit-textarea{
+  width:100%;min-height:40vh;border:none;outline:none;
+  font-size:15px;line-height:1.75;color:var(--text);
+  background:transparent;resize:none;
+  font-family:inherit;text-indent:2em;
+}
+.edit-textarea::placeholder{color:var(--text-muted)}
+.edit-tags-section{margin-top:18px}
+.edit-tags-label{font-size:12px;color:var(--text-muted);margin-bottom:8px}
+.edit-footer-area{
+  flex-shrink:0;padding:14px 18px;padding-bottom:calc(8px + var(--safe-bottom));
+  border-top:1px solid var(--glass-border);
+}
+.edit-footer{
+  display:flex;gap:12px;margin-top:14px;
+}
+.edit-footer-btn{
+  flex:1;padding:12px;border-radius:var(--radius-btn);
+  cursor:pointer;border:1px solid var(--glass-border-strong);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.edit-footer-btn:active{transform:scale(.96)}
+.edit-footer-btn svg{width:22px;height:22px}
+.edit-footer-delete{
+  background:rgba(224,85,85,0.08);border-color:rgba(224,85,85,0.2);
+}
+.edit-footer-delete svg{stroke:var(--danger)}
+.edit-footer-delete:active{background:rgba(224,85,85,0.15)}
+.edit-footer-revert{
+  background:rgba(0,0,0,0.03);
+}
+.edit-footer-revert svg{stroke:var(--text-secondary)}
+.edit-footer-revert:active{background:rgba(0,0,0,0.07)}
 @media(min-width:500px){
   .app{border-left:1px solid var(--glass-border);border-right:1px solid var(--glass-border)}
 }
@@ -550,6 +628,37 @@ input,textarea,select{user-select:text}
     </div>
   </div>
   <div class="modal-body" id="detail-content"></div>
+</div>
+
+<!-- ====== FULL-SCREEN EDIT VIEW ====== -->
+<div class="edit-view" id="edit-view" style="display:none">
+  <div class="edit-header">
+    <button class="edit-back-btn" id="btn-edit-back">←</button>
+    <div class="edit-title" id="edit-view-title">编辑灵感</div>
+    <button class="edit-save" id="btn-edit-save">保存</button>
+  </div>
+  <div class="edit-body">
+    <textarea class="edit-textarea" id="edit-textarea" placeholder="写下你的灵感..."></textarea>
+  </div>
+  <div class="edit-footer-area">
+    <div class="edit-tags-section">
+      <div class="edit-tags-label">标签</div>
+      <div class="chip-row" id="edit-tags-chips"></div>
+      <div class="inline-add" id="edit-tag-add-row" style="display:none">
+        <input type="text" id="edit-input-new-tag" placeholder="输入新标签名">
+        <button class="btn btn-primary btn-sm" id="edit-btn-confirm-tag">添加</button>
+      </div>
+      <button class="chip-add" id="edit-btn-new-tag" style="margin-top:6px">+ 新标签</button>
+    </div>
+    <div class="edit-footer">
+      <button class="edit-footer-btn edit-footer-delete" id="edit-btn-delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      </button>
+      <button class="edit-footer-btn edit-footer-revert" id="edit-btn-revert">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+      </button>
+    </div>
+  </div>
 </div>
 
 </div><!-- /app -->
@@ -917,7 +1026,7 @@ function renderList(){
         toggleCardSelect(card.dataset.id);
         return;
       }
-      openEditModal(card.dataset.id);
+      openEditView(card.dataset.id);
     });
   });
   container.querySelectorAll('.pin-heart').forEach(heart=>{
@@ -985,6 +1094,68 @@ function closeAddModal(){
   clearTimeout(autoSaveTimer);
   document.getElementById('modal-add').style.display='none';
 }
+
+// ==================== FULL-SCREEN EDIT VIEW ====================
+let editViewId=null;
+let editSelectedTags=[];
+
+function openEditView(id){
+  const i=DATA.inspirations.find(x=>x.id===id);
+  if(!i)return;
+  editViewId=id;
+  document.getElementById('edit-view-title').textContent='编辑灵感';
+  document.getElementById('edit-textarea').value=i.content;
+  renderEditTags(i.tags||[]);
+  document.getElementById('edit-view').style.display='flex';
+  setTimeout(()=>document.getElementById('edit-textarea').focus(),400);
+}
+
+function closeEditView(){
+  clearTimeout(autoSaveTimer);
+  clearTimeout(editAutoSaveTimer);
+  document.getElementById('edit-view').style.display='none';
+  editViewId=null;
+  editSelectedTags=[];
+}
+
+function saveEditView(){
+  const content=document.getElementById('edit-textarea').value.trim();
+  if(!content){toast('请输入灵感内容');return;}
+  const idx=DATA.inspirations.findIndex(x=>x.id===editViewId);
+  if(idx>=0){
+    DATA.inspirations[idx].content=content;
+    DATA.inspirations[idx].tags=[...editSelectedTags];
+    DATA.inspirations[idx].updatedAt=Date.now();
+  }
+  saveData(DATA);saveCloudNow();
+  toast('灵感已更新');
+  closeEditView();
+  renderList();
+}
+
+function renderEditTags(preselect){
+  editSelectedTags=[...preselect];
+  const container=document.getElementById('edit-tags-chips');
+  container.innerHTML=DATA.tags.map(t=>{
+    const sel=editSelectedTags.includes(t);
+    const c=getTagColor(t);
+    let style,cls;
+    if(sel){
+      cls='chip sel';style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
+    }else{
+      cls='chip';style=`background:${c.bg};color:${c.text};border-color:${c.border}`;
+    }
+    return`<span class="${cls}" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
+  }).join('');
+  container.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      const t=this.dataset.tag;
+      if(editSelectedTags.includes(t)){editSelectedTags=editSelectedTags.filter(x=>x!==t);}
+      else{editSelectedTags.push(t);}
+      renderEditTags(editSelectedTags);
+    });
+  });
+}
 let selectedTags=[];
 function renderTagChips(preselect){
   selectedTags=[...preselect];
@@ -1031,6 +1202,22 @@ function autoSave(){
     }
     saveData(DATA);
     if(document.getElementById('home-view').style.display!=='none')renderList();
+  },1500);
+}
+let editAutoSaveTimer=null;
+function autoSaveEdit(){
+  clearTimeout(editAutoSaveTimer);
+  editAutoSaveTimer=setTimeout(()=>{
+    if(!editViewId)return;
+    const content=document.getElementById('edit-textarea').value.trim();
+    if(!content)return;
+    const idx=DATA.inspirations.findIndex(x=>x.id===editViewId);
+    if(idx>=0){
+      DATA.inspirations[idx].content=content;
+      DATA.inspirations[idx].tags=[...editSelectedTags];
+      DATA.inspirations[idx].updatedAt=Date.now();
+      saveData(DATA);
+    }
   },1500);
 }
 function saveInspiration(){
@@ -1215,8 +1402,8 @@ function renderDetail(id){
       <button class="btn btn-outline" id="btn-detail-edit" style="flex:1;justify-content:center">编辑</button>
     </div>`;
   document.getElementById('btn-detail-pin').addEventListener('click',()=>{togglePin(i.id);renderDetail(i.id);});
-  document.getElementById('btn-detail-edit').addEventListener('click',()=>{showHome();setTimeout(()=>openEditModal(i.id),150);});
-  document.getElementById('btn-edit-mode').addEventListener('click',()=>{showHome();setTimeout(()=>openEditModal(i.id),150);});
+  document.getElementById('btn-detail-edit').addEventListener('click',()=>{showHome();setTimeout(()=>openEditView(i.id),150);});
+  document.getElementById('btn-edit-mode').addEventListener('click',()=>{showHome();setTimeout(()=>openEditView(i.id),150);});
   document.getElementById('btn-detail-delete').addEventListener('click',()=>{confirmDelete(i.id);});
 }
 
@@ -1284,14 +1471,45 @@ function init(){
   document.getElementById('btn-detail-back').addEventListener('click',showHome);
   document.getElementById('input-bar').addEventListener('click',openAddModal);
   document.getElementById('input-content').addEventListener('input',autoSave);
+  document.getElementById('edit-textarea').addEventListener('input',autoSaveEdit);
   document.getElementById('btn-close-add').addEventListener('click',closeAddModal);
   document.getElementById('btn-save').addEventListener('click',saveInspiration);
   document.getElementById('btn-new-tag').addEventListener('click',()=>{document.getElementById('tag-add-row').style.display='flex';document.getElementById('input-new-tag').focus();});
   document.getElementById('btn-confirm-tag').addEventListener('click',addNewTagFromModal);
   document.getElementById('input-new-tag').addEventListener('keydown',e=>{if(e.key==='Enter')addNewTagFromModal();});
   document.getElementById('btn-go-detail').addEventListener('click',()=>{if(editingId){closeAddModal();showDetail(editingId)}});
-  document.getElementById('btn-delete-from-edit').addEventListener('click',()=>{if(editingId){closeAddModal();confirmDelete(editingId)}});
+  document.getElementById('btn-delete-from-edit').addEventListener('click',()=>{if(editingId){const id=editingId;closeAddModal();confirmDelete(id)}});
   document.getElementById('modal-add').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
+  // 全屏编辑视图
+  document.getElementById('btn-edit-back').addEventListener('click',closeEditView);
+  document.getElementById('btn-edit-save').addEventListener('click',saveEditView);
+  document.getElementById('edit-btn-delete').addEventListener('click',()=>{
+    if(editViewId){const id=editViewId;closeEditView();confirmDelete(id)}
+  });
+  document.getElementById('edit-btn-revert').addEventListener('click',()=>{
+    if(editViewId){
+      const i=DATA.inspirations.find(x=>x.id===editViewId);
+      if(i){
+        document.getElementById('edit-textarea').value=i.content;
+        renderEditTags(i.tags||[]);
+        toast('已回退修改');
+      }
+    }
+  });
+  document.getElementById('edit-btn-new-tag').addEventListener('click',()=>{document.getElementById('edit-tag-add-row').style.display='flex';document.getElementById('edit-input-new-tag').focus();});
+  document.getElementById('edit-btn-confirm-tag').addEventListener('click',()=>{
+    const input=document.getElementById('edit-input-new-tag');
+    const name=input.value.trim();
+    if(!name)return;
+    if(DATA.tags.includes(name)){toast('标签已存在');return}
+    DATA.tags.push(name);assignTagColor(name);editSelectedTags.push(name);
+    saveData(DATA);saveCloudNow();
+    renderEditTags(editSelectedTags);
+    document.getElementById('edit-tag-add-row').style.display='none';
+    input.value='';toast('标签已添加');
+  });
+  document.getElementById('edit-input-new-tag').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('edit-btn-confirm-tag').click();});
+  document.getElementById('edit-view').addEventListener('click',function(e){if(e.target===this)closeEditView();});
   document.getElementById('btn-filter').addEventListener('click',openFilterModal);
   document.getElementById('btn-close-filter').addEventListener('click',closeFilterModal);
   document.getElementById('btn-apply-filter').addEventListener('click',applyFilter);
