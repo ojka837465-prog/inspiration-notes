@@ -652,8 +652,12 @@ input,textarea,select{user-select:text}
   </div>
   <div class="edit-footer-area">
     <div class="edit-tags-section">
-      <div class="edit-tags-label">标签</div>
-      <div class="chip-row" id="edit-tags-chips"></div>
+      <div class="edit-tags-label">已选标签</div>
+      <div class="chip-row" id="edit-tags-selected"></div>
+      <div class="edit-tags-sub" style="margin-top:10px">
+        <div class="edit-tags-label" style="font-size:11px;opacity:.7">可选标签</div>
+        <div class="chip-row" id="edit-tags-available"></div>
+      </div>
       <div class="inline-add" id="edit-tag-add-row" style="display:none">
         <input type="text" id="edit-input-new-tag" placeholder="输入新标签名">
         <button class="btn btn-primary btn-sm" id="edit-btn-confirm-tag">添加</button>
@@ -1144,17 +1148,33 @@ function saveEditView(){
 
 function renderEditTags(preselect){
   editSelectedTags=[...preselect];
-  const container=document.getElementById('edit-tags-chips');
-  // 只显示已选中的标签
-  container.innerHTML=editSelectedTags.map(t=>{
+  const selContainer=document.getElementById('edit-tags-selected');
+  const avlContainer=document.getElementById('edit-tags-available');
+
+  // 已选标签
+  selContainer.innerHTML=editSelectedTags.map(t=>{
     const c=getTagColor(t);
-    const style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
-    return`<span class="chip sel" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
+    return`<span class="chip sel" data-tag="${escAttr(t)}" style="background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}">${esc(t)}</span>`;
   }).join('');
-  container.querySelectorAll('.chip').forEach(chip=>{
+
+  // 未选标签
+  const available=DATA.tags.filter(t=>!editSelectedTags.includes(t));
+  avlContainer.innerHTML=available.map(t=>{
+    const c=getTagColor(t);
+    return`<span class="chip" data-tag="${escAttr(t)}" style="background:${c.bg};color:${c.text};border-color:${c.border}">${esc(t)}</span>`;
+  }).join('');
+
+  // 已选标签点击=移除
+  selContainer.querySelectorAll('.chip').forEach(chip=>{
     chip.addEventListener('click',function(){
-      const t=this.dataset.tag;
-      editSelectedTags=editSelectedTags.filter(x=>x!==t);
+      editSelectedTags=editSelectedTags.filter(x=>x!==this.dataset.tag);
+      renderEditTags(editSelectedTags);
+    });
+  });
+  // 未选标签点击=添加
+  avlContainer.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      editSelectedTags=[...editSelectedTags,this.dataset.tag];
       renderEditTags(editSelectedTags);
     });
   });
