@@ -3,16 +3,24 @@
   "short_name": "Inspiration",
   "description": "灵感记录工具",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f0ece6",
   "theme_color": "#7c6ba0",
+  "lang": "zh-CN",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
