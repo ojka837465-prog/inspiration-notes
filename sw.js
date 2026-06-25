@@ -1,9 +1,10 @@
-const CACHE = 'inspiration-v3';
+const CACHE = 'inspiration-v4';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg',
+  './icon-192x192.png',
+  './icon-512x512.png',
   'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js'
 ];
