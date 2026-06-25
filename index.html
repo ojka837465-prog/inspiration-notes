@@ -946,7 +946,7 @@ function getCardStyle(inspiration){
   if(inspiration.isPinned)return'';
   const tags=inspiration.tags;if(!tags||!tags.length)return'';
   const c=getTagColor(tags[0]);
-  return`border-left:4px solid ${c.border};`;
+  return`border-top-color:${c.border};`;
 }
 
 let filterTag=null;
@@ -1145,22 +1145,16 @@ function saveEditView(){
 function renderEditTags(preselect){
   editSelectedTags=[...preselect];
   const container=document.getElementById('edit-tags-chips');
-  container.innerHTML=DATA.tags.map(t=>{
-    const sel=editSelectedTags.includes(t);
+  // 只显示已选中的标签
+  container.innerHTML=editSelectedTags.map(t=>{
     const c=getTagColor(t);
-    let style,cls;
-    if(sel){
-      cls='chip sel';style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
-    }else{
-      cls='chip';style=`background:${c.bg};color:${c.text};border-color:${c.border}`;
-    }
-    return`<span class="${cls}" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
+    const style=`background:${c.border};color:#fff;border-color:${c.border};box-shadow:0 0 0 2px ${c.bg}`;
+    return`<span class="chip sel" data-tag="${escAttr(t)}" style="${style}">${esc(t)}</span>`;
   }).join('');
   container.querySelectorAll('.chip').forEach(chip=>{
     chip.addEventListener('click',function(){
       const t=this.dataset.tag;
-      if(editSelectedTags.includes(t)){editSelectedTags=editSelectedTags.filter(x=>x!==t);}
-      else{editSelectedTags.push(t);}
+      editSelectedTags=editSelectedTags.filter(x=>x!==t);
       renderEditTags(editSelectedTags);
     });
   });
